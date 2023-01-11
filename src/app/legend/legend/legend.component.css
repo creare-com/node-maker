@@ -1,0 +1,40 @@
+#legend-container {
+    z-index: 900;
+    position: absolute;
+    margin-left: auto;
+    height: fit-content;
+    width: fit-content;
+    text-align: left;
+    padding: 0.2em;
+    top: auto;
+    bottom: 5em;
+    right: 1em;
+    box-shadow: grey;
+    background-color: white;
+    border-color: #828383;
+    border-style: solid;
+    border-width: 1px;
+    display: none;
+}
+
+#legend-title{
+    margin-bottom: 0.25em;
+    font-weight: bold;
+}
+
+#cmapImage {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    border-style: solid;
+    border-color: #828383;
+    border-width: 1px;
+    margin-right: 0.2em;
+    transform: scaleY(-1);
+}
+
+.legend-input {
+    width: 5em;
+}
+
+
+

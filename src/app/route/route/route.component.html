@@ -1,0 +1,187 @@
+<div id="route-container" [style.border-style]="routeParams.containerBorderStyle" [style.background-color]="routeParams.containerBGColor">
+    <div id="route-main-icon" (click)="routeService.onClickMainIcon()"> 
+        <fa-icon [icon]="routeService.faRoute"></fa-icon>
+    </div>
+    <div *ngIf="!routeParams.hideControls" id="route-form-container">
+        
+        <!-- Main Select Menu -->
+        <div id="route-form-container">
+            <div id="route-name-container" class="route-row">
+                <div class="route-input" style="font-weight: 700;">
+                Select New or Use Existing Route 
+                </div>
+            </div>
+        </div>
+        <div id="route-form-container">
+            <div id="route-name-container" class="route-row">
+                <div class="route-input">
+                    <select *ngIf="editorParams.pipelines.length > 0" style="width: 10em" id="route-editor-select" [(ngModel)]="routeParams.currentRoute" (ngModelChange)="routeService.routeChange($event)">
+                        <option value="Choose One"> Choose One </option>
+                        <option value="New"> New </option>
+                        <option *ngFor="let n of routeParams.routeNames" value="{{ n }}">{{ n }}</option>
+                    </select>
+                    <div *ngIf="editorParams.pipelines.length == 0">
+                        Loading...
+                    </div>
+                </div>
+                <div *ngIf="routeParams.currentRoute!='New' && routeParams.currentRoute!='Choose One'" class="route-input">
+                    &nbsp;
+                    <button id="jumpToMapButton" (click)="routeService.jumpToMap()">
+                        <fa-icon [icon]="routeService.faMagnifyingGlassLocation"></fa-icon>
+                        Jump To
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Name -->
+        <div *ngIf="routeParams.currentRoute=='New'" id="route-form-container">
+            <div id="route-name-container" class="route-row">
+                <div class="route-input">
+                    <input type="text" list="routeName" id="route-name" (keyup.enter)="routeService.computeCostmap()" (input)="routeService.onMapNameChange($event)" value="{{ routeParams.routeName }}"/>
+                </div>
+                <label for="route-name">Name</label>
+            </div>
+        </div>
+
+        <!-- Speed Map -->
+        <div *ngIf="routeParams.currentRoute!='Choose One'" id="route-form-container">
+            <div id="route-source-container" class="route-row">
+                <div class="route-input">
+                    <select *ngIf="routeParams.currentRoute=='New'" (change)="routeService.changeSource($event)" [(ngModel)]="routeParams.routeSource" id="route-map-source" class="minimal" name="route-maps-source">
+                        <option value=""> Choose Speed Map </option>
+                        <option *ngFor="let n of editorParams.pipelines" value="{{ n.name }}">{{ n.name }}</option>
+                    </select>
+                    <select *ngIf="routeParams.currentRoute!='New'" (change)="routeService.changeSource($event)" [(ngModel)]="routeParams.routeSource" id="route-map-source" class="minimal" name="route-maps-source" disabled>
+                        <option *ngFor="let n of editorParams.pipelines" value="{{ n.name }}">{{ n.name }}</option>
+                    </select>
+                    &nbsp;
+                    <!-- Viewing Speed Maps -->
+                    <button *ngIf="routeParams.routeSource.length>0 && routeParams.routeNames.includes(routeParams.routeName)" [style.background-color]="routeParams.viewing.speed?'lightblue':'#eee'" title="View" (click)="routeService.viewMap('speed')" >
+                        <fa-icon [icon]="routeService.faEye"></fa-icon>
+                    </button>
+                    &nbsp;
+                    <select *ngIf="routeParams.routeSource.length>0 && editorParams.outputsTracker[routeParams.routeSource]['options'].length>0 && routeParams.routeNames.includes(routeParams.routeName)" (change)="routeService.changeOutputs($event)" [(ngModel)]="routeParams.routeOutputs" class="minimal">
+                        <option *ngFor="let opt of editorParams.outputsTracker[routeParams.routeSource]['options']" value="{{ opt }}">{{ opt }}</option>
+                    </select>
+                </div>
+            </div>
+            <div id="route-source-container" class="route-row">
+                <div class="route-input">
+                    <button style="width:2em;" (click)="routeService.showModifiers()">{{routeParams.showMods}}</button>
+                    <label *ngIf="routeParams.showMods == '+'"> Show Roads and Blocks </label>
+                    <label *ngIf="routeParams.showMods == '-'"> Hide Roads and Blocks </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Roads, Blocks, Update Speed Map -->
+        <div *ngIf="routeParams.currentRoute!='Choose One' && routeParams.showMods=='-'" id="route-form-container">
+            <div id="route-add-road-container" class="route-row">
+                <div (click)="routeService.onAddRoadClick()">
+                    <fa-icon
+                        id="route-add-road-icon"
+                        class="route-icon"
+                        [icon]="routeService.faRoad"
+                        [ngClass]="{'route-icon-active' : routeParams.state === 'addRoad' }"
+                    ></fa-icon>
+                </div>
+                <input id="route-add-road-input" type="number" [(ngModel)]="routeParams.speedValue"/>
+                <select id="route-map-speed-time" class="minimal" [(ngModel)]="routeParams.speedType">
+                    <option value="s">Speed (mph)</option>
+                    <option value="t">Time (hours)</option>
+                </select>
+                <label for="route-add-road-icon">Add Road</label>
+            </div>
+            <div id="route-add-block-container" class="route-row">
+                <div (click)="routeService.onAddBlockClick()">
+                    <fa-icon
+                        id="route-add-block-icon"
+                        class="route-icon"
+                        [icon]="routeService.faBan"
+                        [ngClass]="{'route-icon-active' : routeParams.state === 'addBlock' }"
+                    ></fa-icon>
+                </div>
+                <label for="route-add-block-icon">Add Block (double-click to end)</label>
+            </div>
+            <div class="route-row route-center-justify">
+                <button id="button-route-update" (click)="routeService.updateMap()">Update Cost Map / Save</button>
+            </div>
+        </div>
+
+        <!-- ROI Bounds -->
+        <div *ngIf="routeParams.currentRoute=='New'" id="route-form-container">
+            <div id="route-bounds-container" class="route-row">
+                <div (click)="routeService.onSetBoundsClick()">
+                    <fa-icon
+                        id="route-bounds-icon"
+                        class="route-icon"
+                        [icon]="routeService.faSquare"
+                        [ngClass]="{'route-icon-active' : routeParams.state === 'bounds' }"
+                    ></fa-icon>
+                </div>
+                <label for="route-bounds-icon">Set ROI Bounds (Click-Drag) </label>
+            </div>
+        </div>
+        
+        <!-- Destination -->
+        <div *ngIf="routeParams.currentRoute=='New'" id="route-form-container">
+            <div id="route-end-container" class="route-row">
+                <div (click)="routeService.onAddEndClick()">
+                    <fa-icon
+                        id="route-end-icon"
+                        class="route-icon"
+                        [icon]="routeService.faLocationDot"
+                        [ngClass]="{'route-icon-active' : routeParams.state === 'endPoint' }"
+                        ></fa-icon>
+                </div>
+                <label for="route-end-icon">Set Destination</label>
+            </div>
+        </div>
+
+        <!-- Starting Location -->
+        <div *ngIf="routeParams.currentRoute!='Choose One'" id="route-form-container">
+            <div id="route-set-loc-container" class="route-row">
+                <div (click)="routeService.onSetLocationClick()">
+                    <fa-icon
+                        id="route-set-loc-icon"
+                        class="route-icon"
+                        [icon]="routeService.faTruck"
+                        [ngClass]="{'route-icon-active' : routeParams.state === 'addStart' }"
+                    ></fa-icon>
+                </div>
+                <label for="route-set-loc-icon">Set Starting Location</label>
+            </div>
+        </div>
+
+        <!-- Delete Route -->
+        <div *ngIf="routeParams.currentRoute!='Choose One'" id="route-form-container">
+            <div class="route-row route-center-justify">
+                <button *ngIf="routeParams.routeNames.includes(routeParams.routeName)" [style.background-color]="routeParams.viewing.cost?'lightblue':'#eee'" (click)="routeService.viewMap('cost')"> View Costmap </button>
+                <button *ngIf="!routeParams.routeNames.includes(routeParams.routeName)" style="visibility:hidden;"> View Costmap </button>
+                <!-- <button *ngIf="!routeParams.routeNames.includes(routeParams.routeName)" disabled> View Costmap </button> -->
+                &nbsp;
+                <button id="button-remove-route" (click)="routeService.removeSavedMap(routeParams.routeName)"> Delete Route </button>                
+            </div>
+        </div>
+
+        <!-- Route Info -->
+        <div *ngIf="routeParams.routeInfo" id="route-form-container">
+            &nbsp;
+            <label>Route Info</label>
+            <div>
+                Distance: {{routeParams.routeInfo.distance}} (Km)
+            </div>
+            <div>
+                Time: {{routeParams.routeInfo.time}} (min)
+            </div>
+            &nbsp;
+        </div>
+            
+        <!-- Clear Map -->
+        <div class="route-row route-end-justify">
+            <button id="button-clear-map" (click)="routeService.clearMap()">Clear Map</button>
+        </div>
+
+    </div>
+</div>

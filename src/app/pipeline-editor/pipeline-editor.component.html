@@ -1,0 +1,552 @@
+<!-- Creation of pipelines -->
+<div class="container">
+  <div class="content" id="start">
+
+    <!-- Pipeline Name -->
+    <div>
+      <label class="fs30 required" for="pipeline-name">Product Name: </label>&nbsp;
+      <input type="text" [(ngModel)]="editorParams.pipelineName"/>
+    </div>
+
+    <!-- Colormap -->
+    <div>
+      <label class="fs20 required" for="colormap">Colormap: </label>&nbsp;
+      <select (change)="changeColormap($event)" [(ngModel)]="editorParams.selectedColormap" >
+        <option>Choose Colormap</option>
+        <option *ngFor="let colormap of setupParams.colormapList">{{ colormap }}</option>
+      </select>
+      &nbsp;&nbsp;
+      <label class="fs20 required" for="clims">clim: </label>
+      <input type="text" [(ngModel)]="editorParams.climLower" placeholder="vmin"/>
+      <input type="text" [(ngModel)]="editorParams.climUpper" placeholder="vmax"/>
+    </div>
+
+    <!-- Category -->
+    <div>
+      <label class="fs20 required" for="category">Category: </label>&nbsp;
+      <select (change)="changeCategory($event)" [(ngModel)]="editorParams.selectedCategory" >
+        <option *ngIf="!setupParams.WIRP">Choose Category</option>
+        <option *ngFor="let category of setupParams.categoriesList">{{ category }}</option>
+      </select>
+    </div>
+
+    <!-- Node -->
+    <div id="node_location">
+      <label class="fs20 required" for="nodes">Node: </label>&nbsp;
+      <select (change)="changeNode($event)" [(ngModel)]="editorParams.selectedNode" >
+        <option *ngIf="!setupParams.WIRP">Choose Node</option>
+        <option *ngFor="let node of editorParams.nodesList">{{ node }}</option>
+      </select>
+    </div>
+
+    <!-- Required Attributes -->
+    <label class="fs20 required">Required Attributes: </label>
+    <div class="indent">
+      <ng-container *ngFor="let attr of editorParams.attrsList">
+        <!-- Enum Type -->
+        <div class="horizontal" *ngIf="setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['required'] && setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['type']=='Enum'">
+          <label> {{attr}}: &nbsp;</label>
+          <div>
+            <select id="{{attr}}">
+              <option> Choose One </option>
+              <option *ngFor="let opt of setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['values']" [selected]="opt === editorParams.currentAttrValues[attr]" [value]="opt">{{ opt }}</option>
+            </select>
+          </div>
+        </div>
+        <!-- Bool Type -->
+        <div class="horizontal" *ngIf="setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['required'] && setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['type']=='Bool'">
+          <label> {{attr}}: &nbsp;</label>
+          <div>
+            <select id="{{attr}}">
+              <option> Choose One </option>
+              <option *ngFor="let opt of [true,false]" [selected]="opt === editorParams.currentAttrValues[attr]" [value]="opt">{{ opt }}</option>
+            </select>
+          </div>
+        </div>
+        <!-- InterpolationTrait Type -->
+        <div class="horizontal" *ngIf="setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['required'] && setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['type']=='InterpolationTrait'">
+          <label> {{attr}}: &nbsp;</label>
+          <div>
+            <select id="{{attr}}" (change)="showCustomInterpolation($event,'required')">
+              <option> Choose One </option>
+              <option> Custom </option>
+              <option *ngFor="let opt of setupParams.interpolationMethods" [selected]="opt === editorParams.currentAttrValues[attr]" [value]="opt">{{ opt }}</option>
+            </select>
+          </div>
+          <div>
+            <textarea id="custom_interpolation_required" value="" [style.display]="'none'" placeholder="Dict or List"></textarea>
+          </div>
+        </div>
+        <!-- ArrayTrait Type -->
+        <div class="horizontal" *ngIf="setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['required'] && setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['type']=='ArrayTrait'">
+          <label> {{attr}}: &nbsp;</label>
+          <div>
+            <textarea id="{{attr}}" value="{{editorParams.currentAttrValues[attr]}}" placeholder="{{setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['default']}}"></textarea>
+          </div>
+        </div>
+        <!-- Coordinates Type -->
+        <div class="horizontal" *ngIf="setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['required'] && setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['type']=='Coordinates'">
+          <label> {{attr}}: &nbsp;</label>
+          <div>
+            <!-- <input id="{{attr}}" value="" readonly="readonly" placeholder="{{setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['default']}}"> -->
+            <input id="{{attr}}" value="" readonly="readonly" placeholder="Unsupported">
+          </div>
+        </div>
+        <!-- Dict Type -->
+        <div class="horizontal" *ngIf="setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['required'] && setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['type']=='Dict' && !(attr=='inputs' || attr=='source' || attr=='sources')">
+          <label> {{attr}}: &nbsp;</label>
+          <!-- <div>
+            <textarea id="{{attr}}" value="" placeholder="dictionary"></textarea>
+          </div> -->
+          <!-- json-editor -->
+          <json-editor [options]="JSONOptions" [data]="{}" (change)="getData($event,attr)"></json-editor>
+        </div>
+        <!-- Dims -->
+        <div class="horizontal" *ngIf="setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['required'] && attr=='dims'">
+          <label> {{attr}}: &nbsp;</label>
+          <div>
+            <ng-multiselect-dropdown class="custom-font-size"
+              [placeholder]="'Select Item(s)'"
+              [settings]="dropdownSettings"
+              [data]="editorParams.dropdownListDims"
+              [(ngModel)]="editorParams.selectedItemsDims"
+              (onSelect)="onItemSelectDims($event)"
+              (onSelectAll)="onSelectAllDims($event)" >
+            </ng-multiselect-dropdown>
+          </div>
+        </div>
+        <!-- Input: Dict of NodeTraits -->
+        <div class="horizontal" *ngIf="setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['required'] && (attr=='inputs') && (setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['schema']['key']=='Unicode' && setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['schema']['value']=='NodeTrait')">
+          <label> {{attr}}: &nbsp;</label>
+          <div>
+            <ng-multiselect-dropdown class="custom-font-size"
+              [placeholder]="'Select Pipeline(s)'"
+              [settings]="dropdownSettings"
+              [data]="editorParams.dropdownListPipelines"
+              [(ngModel)]="editorParams.selectedItemsPipelines"
+              (onSelect)="onItemSelectPipelines($event)"
+              (onSelectAll)="onSelectAllPipelines($event)" >
+            </ng-multiselect-dropdown>
+          </div>
+        </div>
+        <!-- NodeTrait: Source -->
+        <div class="horizontal" *ngIf="setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['required'] && (setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['type']=='NodeTrait')">
+          <label> {{attr}}: &nbsp;</label>
+          <div>
+            <select id="{{attr}}">
+              <option>Choose Product</option>
+              <option *ngFor="let pipeline of editorParams.pipelines" [selected]="pipeline.name === editorParams.currentAttrValues[attr]" [value]="pipeline.name">{{ pipeline.name }}</option>
+            </select>
+          </div>
+        </div>
+        <!-- Unicode -->
+        <div class="horizontal" *ngIf="setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['required'] && setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['type']=='Unicode'">
+          <label> {{attr}}: &nbsp;</label>
+          <div>
+            <textarea id="{{attr}}" value="{{editorParams.currentAttrValues[attr]}}" placeholder="{{setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['type']}}"></textarea>
+          </div>
+        </div>
+        <!-- Any -->
+        <div class="horizontal" *ngIf="setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['required'] && setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['type']=='Any'">
+          <label> {{attr}}: &nbsp;</label>
+          <div>
+            <textarea id="{{attr}}" value="{{editorParams.currentAttrValues[attr]}}" placeholder="{{setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['type']}}"></textarea>
+          </div>
+        </div>
+        <!-- Other -->
+        <div class="horizontal" *ngIf="setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['required'] && !setupParams.customList.includes(attr)">
+          <label> {{attr}}: &nbsp;</label>
+          <div>
+            <input type="text" id="{{attr}}" value="{{editorParams.currentAttrValues[attr]}}" placeholder="{{setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['type']}}">
+          </div>
+        </div>
+      </ng-container>
+    </div>
+
+    <!-- Optional Attributes -->
+    <label class="fs20 required">Optional Attributes: </label>
+    <div class="indent">
+      <button type="button" id="collapser_attr" class="collapsible" (click)="showOptionalAttrs()" *ngIf="editorParams.attrsList.length>0">Show</button>
+      <div class="collapseContent" id="attr_collapse">
+        <ng-container *ngFor="let attr of editorParams.attrsList">
+          <!-- Enum Type -->
+          <div class="horizontal" *ngIf="!setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['required'] && setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['type']=='Enum'">
+            <label> {{attr}}: &nbsp;</label>
+            <div>
+              <select id="{{attr}}">
+                <option> Choose One </option>
+                <option *ngFor="let opt of setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['values']" [selected]="opt === editorParams.currentAttrValues[attr]" [value]="opt">{{ opt }}</option>
+              </select>
+            </div>
+          </div>
+          <!-- Bool Type -->
+          <div class="horizontal" *ngIf="!setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['required'] && setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['type']=='Bool'">
+            <label> {{attr}}: &nbsp;</label>
+            <div>
+              <select id="{{attr}}">
+                <option> Choose One </option>
+                <option *ngFor="let opt of [true,false]" [selected]="opt === editorParams.currentAttrValues[attr]" [value]="opt">{{ opt }}</option>
+              </select>
+            </div>
+          </div>
+          <!-- InterpolationTrait Type -->
+          <div class="horizontal" *ngIf="!setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['required'] && setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['type']=='InterpolationTrait'">
+            <label> {{attr}}: &nbsp;</label>
+            <div>
+              <select id="{{attr}}" (change)="showCustomInterpolation($event,'optional')">
+                <option> Choose One </option>
+                <option> Custom </option>
+                <option *ngFor="let opt of setupParams.interpolationMethods" [selected]="opt === editorParams.currentAttrValues[attr]" [value]="opt">{{ opt }}</option>
+              </select>
+            </div>
+
+            <div>
+              <textarea id="custom_interpolation_optional" value="" [style.display]="'none'" placeholder="Dict or List"></textarea>
+            </div>
+          </div>
+          <!-- ArrayTrait Type -->
+          <div class="horizontal" *ngIf="!setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['required'] && setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['type']=='ArrayTrait'">
+            <label> {{attr}}: &nbsp;</label>
+            <div>
+              <textarea id="{{attr}}" value="" placeholder="{{setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['default']}}"></textarea>
+            </div>
+          </div>
+          <!-- Coordinates Type -->
+          <div class="horizontal" *ngIf="!setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['required'] && setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['type']=='Coordinates'">
+            <label> {{attr}}: &nbsp;</label>
+            <div>
+              <!-- <input id="{{attr}}" value="" readonly="readonly" placeholder="{{setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['default']}}"> -->
+              <input id="{{attr}}" value="" readonly="readonly" placeholder="Unsupported">
+            </div>
+          </div>
+          <!-- Dict Type -->
+          <div class="horizontal" *ngIf="!setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['required'] && setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['type']=='Dict' && !(attr=='inputs' || attr=='source' || attr=='sources')">
+            <label> {{attr}}: &nbsp;</label>
+            <!-- <div>
+              <textarea id="{{attr}}" value="" placeholder="dictionary"></textarea>
+            </div> -->
+            <!-- json-editor -->
+            <json-editor [options]="JSONOptions" [data]="{}" (change)="getData($event,attr)"></json-editor>
+            <div>&nbsp;</div>
+          </div>
+          <!-- Dims -->
+          <div class="horizontal" *ngIf="!setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['required'] && attr=='dims'">
+            <label> {{attr}}: &nbsp;</label>
+            <div>
+              <ng-multiselect-dropdown class="custom-font-size"
+                [placeholder]="'Select Item(s)'"
+                [settings]="dropdownSettings"
+                [data]="editorParams.dropdownListDims"
+                [(ngModel)]="editorParams.selectedItemsDims"
+                (onSelect)="onItemSelectDims($event)"
+                (onSelectAll)="onSelectAllDims($event)" >
+              </ng-multiselect-dropdown>
+            </div>
+          </div>
+          <!-- Input: Dict of NodeTraits -->
+          <div class="horizontal" *ngIf="!setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['required'] && (attr=='inputs') && (setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['schema']['key']=='Unicode' && setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['schema']['value']=='NodeTrait')">
+            <label> {{attr}}: &nbsp;</label>
+            <div>
+              <ng-multiselect-dropdown class="custom-font-size"
+                [placeholder]="'Select Pipeline(s)'"
+                [settings]="dropdownSettings"
+                [data]="editorParams.dropdownListPipelines"
+                [(ngModel)]="editorParams.selectedItemsPipelines"
+                (onSelect)="onItemSelectPipelines($event)"
+                (onSelectAll)="onSelectAllPipelines($event)" >
+              </ng-multiselect-dropdown>
+            </div>
+          </div>
+          <!-- NodeTrait: Source -->
+          <div class="horizontal" *ngIf="!setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['required'] && (setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['type']=='NodeTrait')">
+            <label> {{attr}}: &nbsp;</label>
+            <div>
+              <select id="{{attr}}">
+                <option>Choose Product</option>
+                <option *ngFor="let pipeline of editorParams.pipelines" [selected]="pipeline.name === editorParams.currentAttrValues[attr]" [value]="pipeline.name">{{ pipeline.name }}</option>
+              </select>
+            </div>
+          </div>
+          <!-- Unicode -->
+          <div class="horizontal" *ngIf="!setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['required'] && setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['type']=='Unicode'">
+            <label> {{attr}}: &nbsp;</label>
+            <div>
+              <textarea id="{{attr}}" value="{{editorParams.currentAttrValues[attr]}}" placeholder="{{setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['type']}}"></textarea>
+            </div>
+          </div>
+          <!-- Any -->
+          <div class="horizontal" *ngIf="!setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['required'] && setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['type']=='Any'">
+            <label> {{attr}}: &nbsp;</label>
+            <div>
+              <textarea id="{{attr}}" value="{{editorParams.currentAttrValues[attr]}}" placeholder="{{setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['type']}}"></textarea>
+            </div>
+          </div>
+          <!-- Other -->
+          <div class="horizontal" *ngIf="!setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['required'] && !setupParams.customList.includes(attr)">
+            <label> {{attr}}: &nbsp;</label>
+            <div>
+              <input type="text" id="{{attr}}" value="{{editorParams.currentAttrValues[attr]}}" placeholder="{{setupParams.spec[editorParams.selectedCategory][editorParams.selectedNode]['attrs'][attr]['type']}}">
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- Style -->
+    <label class="fs20 required" for="style">Style Attributes: </label>&nbsp;
+    <div class="indent">
+      <div>
+        <button type="button" id="collapser_style" class="collapsible" (click)="showStyleAttrs()" *ngIf="editorParams.styleList.length>0">Show</button>
+        <div class="collapseContent" id="style_collapse">
+          <div class="horizontal">
+            <ng-container *ngFor="let sty of editorParams.styleList">
+              <label> {{sty}}: &nbsp;</label>
+              <input type="text" id="{{sty}}" placeholder="">
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Style -->
+    <button class="btn btn-primary" (click)="submit()"> Submit </button>
+      &nbsp;&nbsp;
+    <button class="btn btn-danger" color="red" (click)="clear()"> Clear </button>
+
+  </div>
+
+  <!-- Help text container -->
+  <div class="helptext">
+    <div >
+      <label for="help">Help Text: </label>
+      <span style="display:block"><p innerHTML={{editorParams.helpText}}></p></span>
+    </div>
+  </div>
+
+</div>
+
+<style>
+/* NodeInputComponent's private CSS styles */
+div.container {
+  display: flex;
+  width: 1000px;
+  padding: 10px;
+}
+div.content {
+  padding: 0px;
+  width: 700px;
+  max-height: 750px;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+div.content0 {
+  padding: 0px;
+  width: 100%;
+}
+div.helptext {
+  padding: 10px;
+  width: 300px;
+  max-height: 750px;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+.indent {
+    margin-left: 2em
+}
+
+div.horizontalgap {
+  float: left;
+  overflow: hidden;
+  height: 1px;
+  width: 0px;
+}
+
+.search input {
+  margin: 1rem 0;
+}
+
+.pipelines {
+  list-style-type: none;
+  padding: 0;
+}
+
+.pipelines li {
+  position: relative;
+}
+
+.pipelines li:hover {
+  left: .1em;
+}
+
+.pipelines a {
+  color: black;
+  display: block;
+  font-size: 1.2rem;
+  background-color: #eee;
+  margin: .5em 0;
+  padding: .5em 0;
+  border-radius: 4px;
+}
+
+.pipelines a:hover {
+  color: #2c3a41;
+  background-color: #e6e6e6;
+}
+
+.pipelines .badge {
+  padding: .5em .6em;
+  color: white;
+  background-color: #435B60;
+  min-width: 16px;
+  margin-right: .8em;
+  border-radius: 4px 0 0 4px;
+}
+
+button.right {
+  /* position: absolute; */
+  /* right: -8px; */
+  /* top: 5px; */
+  float: right;
+  background-color: gray;
+  color: white;
+  padding: 0.20em;
+  /* padding: 5px 8px; */
+  width: 2em;
+}
+
+button.delete {
+  /* position: absolute; */
+  /* right: -8px; */
+  /* top: 5px; */
+  float: right;
+  background-color: white;
+  color: red;
+  padding: 0.20em;
+  /* padding: 5px 8px; */
+  width: 2em;
+}
+
+button.edit {
+  /* position: absolute; */
+  /* right: -8px; */
+  /* top: 5px; */
+  float: right;
+  background-color: white;
+  color: green;
+  padding: 0.20em;
+  /* padding: 5px 8px; */
+  width: 2em;
+}
+
+button.view {
+  /* position: absolute; */
+  /* right: -8px; */
+  /* top: 5px; */
+  float: right;
+  background-color: white;
+  color: blue;
+  padding: 0.20em;
+  /* padding: 5px 8px; */
+  width: 2em;
+}
+
+button.btnreset {
+  margin-left:25px;
+  background-color: red;
+  color: black;
+}
+
+.button.apiPath {
+  position: relative;
+  padding: 0.5em 1em;
+  border: 0;
+  border-radius: 0.5em;
+  background-color: red;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+}
+
+.button.apiPath:active,
+.active {
+  top: 2px;
+  left: 1px;
+  background-color: rgb(0, 174, 255);
+  box-shadow: none;
+}
+
+.pipelines input {
+  max-width: 12rem;
+  padding: .25rem;
+  position: absolute;
+  top: 8px;
+}
+
+label.required {color: blue;}
+label.optional {color: black;}
+
+label.fs30 {
+  font-size: 30;
+}
+
+label.fs20 {
+  font-size: 1;
+}
+
+.horizontal {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: start;
+  padding: 0px;
+  width: 80%;
+  word-wrap: break-word;
+}
+
+.custom-font-size .multiselect-dropdown .dropdown-btn {
+  width: 20% !important;
+}
+
+.multiselect-parent .dropdown-toggle {
+  width: 400px;
+}
+
+.multiselect-parent .dropdown-menu {
+  width: 300px;
+}
+
+:host ::ng-deep json-editor,
+:host ::ng-deep json-editor .jsoneditor,
+:host ::ng-deep json-editor > div,
+:host ::ng-deep json-editor jsoneditor-outer {
+  height: 20em;
+  width: 100%;
+}
+
+.collapsible {
+  background-color: #777;
+  color: white;
+  cursor: pointer;
+  padding: 5px;
+  width: 15%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+}
+
+.collapsible:active, .collapsible:hover {
+  background-color: #555;
+}
+
+.collapseContent {
+  display: none;
+}
+
+.pipelineEditor {
+  display: none;
+}
+
+#map{ z-index:1; }
+#modal{ z-index:2; }
+</style>

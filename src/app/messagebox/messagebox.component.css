@@ -1,0 +1,35 @@
+#messageboxContainer {
+    position: absolute;
+    margin: 1em;
+    left:50%;
+    right:50%;
+    margin-left: -37.5%;
+    bottom: 0;
+    height: 5em;
+    width: 75%;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 5px;
+    box-shadow: 5px 5px 5px #AAAAAA;
+    background-color: white;
+    z-index: 1200;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+}
+#mboxClose {
+    position: absolute;
+    right: 0.5em;
+    top: 0.5em;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 5px;
+    padding: 0.5em
+
+}
+
+#mboxMessage {
+    text-align: center;
+    font-size: large;
+}

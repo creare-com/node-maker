@@ -1,0 +1,150 @@
+#route-container {
+    margin-left: auto;
+    text-align: left;
+    border: #828383;
+    border-style: solid;
+    height: fit-content;
+    width: fit-content;
+    border-width: 1px;
+    padding: 0.2em;
+    z-index: 1000;
+    position: absolute;
+    top: 1em;
+    right: 1em;
+    box-shadow: grey;
+}
+
+#route-form-container {
+    margin-right: 3em;
+}
+
+#route-main-icon {
+    position: relative;
+}
+
+#route-main-icon fa-icon {
+    background-color: white;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #555555;
+    border-radius: 4px;
+    padding: 5px;
+    font-size: 1.5em;
+}
+
+#button-route-save {
+    margin-bottom: 0.5em;
+}
+
+.route-hidden {
+    display: none;
+}
+
+.route-row {
+    display: flex;
+}
+
+.route-row-select {
+    display: flex;
+    padding: 10px 0px 10px 0px;
+    text-align: center;
+}
+
+.route-end-justify {
+    justify-content: flex-end;
+}
+
+.route-center-justify {
+    justify-content: center;
+}
+
+.route-row label{
+    margin-left: 1em;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.route-input{
+    margin-left: 0.25em;
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+
+}
+
+.route-icon{
+    margin-left: 0.25em;
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+    font-size: 1.5em;
+    /* background-color: #555555; */
+    width: 1.5em;
+    /* height: 1.5em; */
+    padding: 0.1em;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.route-icon:hover {
+    background-color: rgb(153, 165, 179);
+}
+
+.route-icon-active {
+    background-color: rgb(195, 210, 227);
+}
+
+#route-map-source {
+    box-sizing: border-box;
+    width: 145px;
+    height: 26px;
+    border-radius: 2px;
+    box-shadow: none;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #807f7f;
+    background-color: white;
+}
+
+#route-map-source:disabled {
+    box-sizing: border-box;
+    width: 152px;
+    height: 26px;
+    border-radius: 2px;
+    box-shadow: none;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #807f7f;
+    background-color: white;
+    opacity: 0.50;
+}
+
+#route-name-arrow {
+    content: "V";
+    position:relative;
+    margin-left: -1em;
+    pointer-events:none;
+}
+
+#route-bounds-select{
+    border-style: solid;
+    border-width: 2px;
+    border-color: #807f7f;
+    width: 1.5em;
+    height: 1.5em;
+    border-radius: 5px;
+}
+
+#button-clear-map {
+    margin-right: -2em;
+}
+
+#route-add-road-input {
+    margin-left: 1em;
+    width: 4em;
+}
+
+#route-map-speed-time {
+    width: 8em;
+}

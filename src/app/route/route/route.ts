@@ -1,0 +1,29 @@
+export interface Route {
+    hideControls: Boolean;
+    containerBorderStyle: string;
+    containerBGColor: string;
+    routeNames: string[];
+    availableRoutes: any;
+    routeName: string;
+    currentRoute: string;
+    routeSource: string;
+    routeOutputs: string;
+    viewing: any;
+    routeInfo: any;
+    state: string;
+    showMods: string;
+    speedValue: number;
+    speedType: string;
+    mouseDown: boolean;
+    leafletFuncs: any[];
+    boundsRect: any;
+    endPoint: any;
+    startPoint: any;
+    roads: any;
+    blocks: any;
+    tmpRoad: any;
+    tmpBlock: any;
+    roadBlockAdder: any[],
+    currentPoints: any[];
+    routes: any[];
+}

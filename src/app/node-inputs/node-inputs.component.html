@@ -1,0 +1,152 @@
+<head>
+  <!-- leaflet imports -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
+  <!-- json editor imports -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/9.7.4/jsoneditor.min.css" rel="stylesheet" type="text/css"/>
+</head>
+
+<div class="container">
+  <div class="content0" id="start">
+
+    <!-- Leaflet Map -->
+    <div #mapContainer style="position:relative; height:100%; width:100%;">
+      <app-route></app-route>
+      <app-legend (updateLegend)="leafletService.useCustomColormap()"></app-legend>
+      <app-busybox></app-busybox>
+      <div id="map" #map class="mapContent"></div>
+    </div>
+
+    <!-- instruction text -->
+    <div *ngIf="!setupParams.WIRP">
+      <div style="font-size: 1.25em;">
+        This interface supports creating, editing, and viewing products using the PODPAC framework. To view 
+        <fa-icon [icon]="faEye"></fa-icon>, edit <fa-icon [icon]="faPencilAlt"></fa-icon>, or delete 
+        <fa-icon [icon]="faTrash"></fa-icon> an existing product use the buttons on the right of the products. 
+        New products can be created the 'New Product' button below.
+      </div>
+    </div>
+    <div *ngIf="setupParams.WIRP">
+      <div style="font-size: 1.25em;">
+        To plan a route click the path planning button in the top right of the map <fa-icon [icon]="faRoute"></fa-icon>. 
+        Then choose a name for the route and a speed map from available products. If no speed map is available one can 
+        be created by creating a new product (below). To set the region of interest (ROI), click the ROI bounds checkbox 
+        <fa-icon [icon]="faSquare"></fa-icon> and use the mouse to draw the region directly on the map. Next, set the destination 
+        <fa-icon [icon]="faLocationDot"></fa-icon> and the starting location <fa-icon [icon]="faTruck"></fa-icon>. Roads 
+        <fa-icon [icon]="faRoad"></fa-icon> and blocks <fa-icon [icon]="faBan"></fa-icon> can be added to the map, but be sure 
+        to click the 'Update Cost Map / Save' button for roads and blocks to take effect.
+      </div>
+    </div>
+
+    <!-- product header -->
+    <div style="font-size: 2.5em;" *ngIf="!setupParams.WIRP">
+      Available Products
+    </div>
+    <div style="font-size: 2.5em;" *ngIf="setupParams.WIRP">
+      Available SpeedMaps
+    </div>
+
+    <!-- Pipelines -->
+    <div>
+      <ul class="pipelines">
+        <li *ngFor="let pipeline of editorParams.pipelines" title="Use buttons on the right to interact with this product">
+          <a id="{{pipeline.name}}" [ngStyle]="{'backgroundColor': leafletParams.displayedPipeline==pipeline.name ? 'lightblue' : '#eee' }">
+            <span class="badge">{{ pipeline.id || -1 }}</span>
+            <span>{{ pipeline.name }}</span>
+
+            <button
+              class="delete"
+              title="Delete Product"
+              (click)="delete(pipeline)"
+            >
+              <fa-icon [icon]="faTrash"></fa-icon>
+            </button>
+
+            <button
+              class="edit"
+              title="Edit Product"
+              (click)="editClicked(pipeline)"
+            >
+              <fa-icon [icon]="faPencilAlt"></fa-icon>
+            </button>
+
+            <button
+              class="view"
+              title="Display on Map"
+              (click)="viewClicked(pipeline)"
+            >
+              <fa-icon [icon]="faEye"></fa-icon>
+            </button>
+
+            <select *ngIf="editorParams.outputsTracker && editorParams.outputsTracker[pipeline.name] && editorParams.outputsTracker[pipeline.name]['options'].length>0" class="right" style="margin-right: .8em;" (change)="changeOutput($event)" [(ngModel)]="editorParams.outputsTracker[pipeline.name]['current']" >
+              <option *ngFor="let opt of editorParams.outputsTracker[pipeline.name]['options']">{{ opt }}</option>
+            </select>
+
+            <label> &nbsp; </label>
+
+            <label *ngIf="editorParams.outputsTracker && editorParams.outputsTracker[pipeline.name] && editorParams.outputsTracker[pipeline.name]['options'].length>0" class="right" style="margin-right: .8em;"> Channel: </label>
+
+          </a>
+
+          <div id="{{pipeline.name+'_editor'}}" *ngIf="((pipeline == setupParams.showEditLocation || pipeline.name == setupParams.showEditLocation) && setupParams.showEditLocation!=undefined)">
+            <app-pipeline-editor></app-pipeline-editor>
+          </div>
+
+        </li>
+      </ul>
+    </div>
+
+    <div>
+      <div id="new_pipeline" *ngIf="setupParams.showEditLocation=='new_pipeline'">
+        <app-pipeline-editor></app-pipeline-editor>
+      </div>
+    </div>
+
+    <!-- Pipeline Control Buttons -->
+    <button *ngIf="setupParams.showEditLocation!='new_pipeline'" class="btn btn-primary" (click)="createNewPipeline()"> New Product </button>
+    <button *ngIf="setupParams.showEditLocation=='new_pipeline'" class="btn btn-primary" (click)="createNewPipeline()"> Hide Editor </button>
+    &nbsp;&nbsp;
+    <button class="btn btn-primary" color="green" id="collapser_settings" (click)="showSettings()"> Show Settings </button>
+    
+    <div>
+      &nbsp;
+      <div *ngIf="displaySettings" id="settings_collapse">
+        <!-- Version Information -->
+        <div *ngIf="setupParams.versionInfo">
+          <label class="fs30 required"> Version Info: </label>
+        </div>
+        <div *ngIf="setupParams.versionInfo" class="horizontal">
+          Podpac: {{setupParams.versionInfo.podpac}}
+        </div>
+        <!-- Credential Entering -->
+        &nbsp;
+        <label class="fs30 required" for="apiKey">API Key: </label>&nbsp;
+        <input type="text" id="apiKey" value="onlySomeUsersKnowThis"/>
+        <!-- Development Mode Only -->
+        <div>
+          <label class="fs30 required"> Choose Base API Path: </label>
+        </div>
+        <div class="horizontal">
+          <div>
+              <button class="apiPath active" style="font-size:16px" id="serverButton" title="server" (click)="setAPIPath('default')">
+                <fa-icon [icon]="faDragon"></fa-icon>
+                Server
+              </button>
+              &nbsp;
+              <button class="apiPath" style="font-size:16px" title="localhost" id="localhostButton"(click)="setAPIPath('localhost')">
+                <fa-icon [icon]="faDog"></fa-icon>
+                LocalHost
+              </button>
+              
+          </div>
+        </div>
+        
+      </div>
+    </div>
+
+  </div>
+</div>

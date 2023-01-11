@@ -1,0 +1,3713 @@
+{
+    "algorithms": {
+        "Algorithm": {
+            "attrs": {
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": "Base class for computation nodes with a custom algorithm.\n\n    Notes\n    ------\n    Developers of new Algorithm nodes need to implement the `algorithm` method.\n    ",
+            "module": "podpac.core.algorithm.algorithm.Algorithm"
+        },
+        "Arange": {
+            "attrs": {
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": "A simple test node that gives each value in the output a number.",
+            "module": "podpac.core.algorithm.utility.Arange"
+        },
+        "Arithmetic": {
+            "attrs": {
+                "eqn": {
+                    "default": "",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9ab730>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "params": {
+                    "default": {},
+                    "help": "",
+                    "type": "Dict",
+                    "type_str": "<traitlets.traitlets.Dict object at 0x7efdef9ab790>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": "Create a simple point-by-point computation using named input nodes.\n\n    Examples\n    ----------\n    a = SinCoords()\n    b = Arange()\n    arith = Arithmetic(A=a, B=b, eqn = 'A * B + {offset}', params={'offset': 1})\n    ",
+            "module": "podpac.core.algorithm.generic.Arithmetic"
+        },
+        "Convolution": {
+            "attrs": {
+                "kernel": {
+                    "default": null,
+                    "help": "",
+                    "type": "ArrayTrait",
+                    "type_str": "<podpac.core.utils.ArrayTrait object at 0x7efdb5b82550>",
+                    "values": null
+                },
+                "kernel_dims": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb5b82580>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "source": {
+                    "default": null,
+                    "help": "",
+                    "type": "NodeTrait",
+                    "type_str": "<podpac.core.utils.NodeTrait object at 0x7efdef9a0fa0>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": "Compute a general convolution over a source node.\n\n    This node automatically resizes the requested coordinates to avoid edge effects.\n\n    Attributes\n    ----------\n    source : podpac.Node\n        Source node on which convolution will be performed.\n    kernel : np.ndarray, optional\n        The convolution kernel. This kernel must include the dimensions of source node outputs. The dimensions for this\n        array are labelled by `kernel_dims`. Any dimensions not in the soucr nodes outputs will be summed over.\n    kernel_dims : list, optional\n        A list of the dimensions for the kernel axes. The dimensions in this list must match the\n        coordinates in the source, or contain additional dimensions, and the order does not need to match.\n        Any extra dimensions are summed out.\n    kernel_type : str, optional\n        If kernel is not defined, kernel_type will create a kernel based on the inputs, and it will have the\n        same number of axes as kernel_ndim.\n        The format for the created  kernels is '<kernel_type>, <kernel_size>, <kernel_params>'.\n        Any kernel defined in `scipy.signal` as well as `mean` can be used. For example:\n        kernel_type = 'mean, 8' or kernel_type = 'gaussian,16,8' are both valid.\n        Note: These kernels are automatically normalized such that kernel.sum() == 1\n    ",
+            "module": "podpac.core.algorithm.signal.Convolution"
+        },
+        "CoordData": {
+            "attrs": {
+                "coord_name": {
+                    "default": "none",
+                    "help": "",
+                    "type": "Enum",
+                    "type_str": "<traitlets.traitlets.Enum object at 0x7efdef9abb50>",
+                    "values": [
+                        "time",
+                        "lat",
+                        "lon",
+                        "alt"
+                    ]
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": "Extracts the coordinates from a request and makes it available as a data\n\n    Attributes\n    ----------\n    coord_name : str\n        Name of coordinate to extract (one of lat, lon, time, alt)\n    ",
+            "module": "podpac.core.algorithm.utility.CoordData"
+        },
+        "Count": {
+            "attrs": {
+                "dims": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdef939b80>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "source": {
+                    "default": null,
+                    "help": "",
+                    "type": "NodeTrait",
+                    "type_str": "<podpac.core.utils.NodeTrait object at 0x7efdef9a0fa0>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": "Counts the finite values across dimension(s)",
+            "module": "podpac.core.algorithm.stats.Count"
+        },
+        "DayOfYear": {
+            "attrs": {
+                "coordinates_source": {
+                    "default": null,
+                    "help": "",
+                    "type": "NodeTrait",
+                    "type_str": "<podpac.core.utils.NodeTrait object at 0x7efdb5b83670>",
+                    "values": null
+                },
+                "custom_reduce_fn": {
+                    "default": null,
+                    "help": "",
+                    "type": "Any",
+                    "type_str": "<traitlets.traitlets.Any object at 0x7efdb5b83790>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "reduce_fn": {
+                    "default": null,
+                    "help": "",
+                    "type": "CaselessStrEnum",
+                    "type_str": "<traitlets.traitlets.CaselessStrEnum object at 0x7efdb5b83760>",
+                    "values": [
+                        "all",
+                        "any",
+                        "count",
+                        "max",
+                        "mean",
+                        "median",
+                        "min",
+                        "prod",
+                        "std",
+                        "sum",
+                        "var",
+                        "custom"
+                    ]
+                },
+                "source": {
+                    "default": null,
+                    "help": "",
+                    "type": "NodeTrait",
+                    "type_str": "<podpac.core.utils.NodeTrait object at 0x7efdef9a0fa0>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": "\n    Group a time-dependent source node by day of year and compute a statistic for each group.\n\n    Attributes\n    ----------\n    custom_reduce_fn : function\n        required if reduce_fn is 'custom'.\n    reduce_fn : str\n        builtin xarray groupby reduce function, or 'custom'.\n    source : podpac.Node\n        Source node\n    ",
+            "module": "podpac.core.algorithm.stats.DayOfYear"
+        },
+        "ExpandCoordinates": {
+            "attrs": {
+                "alt": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb5b83130>",
+                    "values": null
+                },
+                "bounds_only": {
+                    "default": false,
+                    "help": "",
+                    "type": "Bool",
+                    "type_str": "<traitlets.traitlets.Bool object at 0x7efdb5b820d0>",
+                    "values": null
+                },
+                "coordinates_source": {
+                    "default": null,
+                    "help": "",
+                    "type": "NodeTrait",
+                    "type_str": "<podpac.core.utils.NodeTrait object at 0x7efdb5b834c0>",
+                    "values": null
+                },
+                "lat": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb5b831c0>",
+                    "values": null
+                },
+                "lon": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb5b83190>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "source": {
+                    "default": null,
+                    "help": "",
+                    "type": "NodeTrait",
+                    "type_str": "<podpac.core.utils.NodeTrait object at 0x7efdef9a0fa0>",
+                    "values": null
+                },
+                "time": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb5b83160>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": "Evaluate a source node with expanded coordinates.\n\n    This is normally used in conjunction with a reduce operation\n    to calculate, for example, the average temperature over the last month. While this is simple to do when evaluating\n    a single node (just provide the coordinates), this functionality is needed for nodes buried deeper in a pipeline.\n\n    lat, lon, time, alt : List\n        Expansion parameters for the given dimension: The options are::\n         * [start_offset, end_offset, step] to expand uniformly around each input coordinate.\n         * [start_offset, end_offset] to expand using the available source coordinates around each input coordinate.\n\n    bounds_only: bool\n        Default is False. If True, will only expand the bounds of the overall coordinates request. Otherwise, it will\n        expand around EACH coordinate in the request. For example, with bounds_only == True, and an expansion of 3\n        you may expand [5, 6, 8] to [2, 3, 4, 5, 6, 7, 8, 9, 10, 11], whereas with bounds_only == False, it becomes\n        [[2, 5, 8], [3, 6, 9], [5, 8, 11]] (brackets added for clarity, they will be concatenated).\n    ",
+            "module": "podpac.core.algorithm.coord_select.ExpandCoordinates"
+        },
+        "Generic": {
+            "attrs": {
+                "code": {
+                    "default": "",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9ab850>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": "\n    Generic Algorithm Node that allows arbitrary Python code to be executed.\n\n    Attributes\n    ----------\n    code : str\n        The multi-line code that will be evaluated. This code should assign \"output\" to the desired result, and \"output\"\n        needs to be a \"numpy array\" or \"xarray DataArray\"\n    inputs : dict(str: podpac.Node)\n        A dictionary of PODPAC nodes that will serve as the input data for the Python script\n\n    Examples\n    ----------\n    a = SinCoords()\n    b = Arange()\n    code = '''import numpy as np\n    output = np.minimum(a, b)\n    '''\n    generic = Generic(code=code, a=a, b=b)\n    ",
+            "module": "podpac.core.algorithm.generic.Generic"
+        },
+        "GroupReduce": {
+            "attrs": {
+                "coordinates_source": {
+                    "default": null,
+                    "help": "",
+                    "type": "NodeTrait",
+                    "type_str": "<podpac.core.utils.NodeTrait object at 0x7efdb5b83670>",
+                    "values": null
+                },
+                "custom_reduce_fn": {
+                    "default": null,
+                    "help": "",
+                    "type": "Any",
+                    "type_str": "<traitlets.traitlets.Any object at 0x7efdb5b83790>",
+                    "values": null
+                },
+                "groupby": {
+                    "default": null,
+                    "help": "",
+                    "type": "CaselessStrEnum",
+                    "type_str": "<traitlets.traitlets.CaselessStrEnum object at 0x7efdb5b836d0>",
+                    "values": [
+                        "dayofyear",
+                        "weekofyear",
+                        "season",
+                        "month"
+                    ]
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "reduce_fn": {
+                    "default": null,
+                    "help": "",
+                    "type": "CaselessStrEnum",
+                    "type_str": "<traitlets.traitlets.CaselessStrEnum object at 0x7efdb5b83760>",
+                    "values": [
+                        "all",
+                        "any",
+                        "count",
+                        "max",
+                        "mean",
+                        "median",
+                        "min",
+                        "prod",
+                        "std",
+                        "sum",
+                        "var",
+                        "custom"
+                    ]
+                },
+                "source": {
+                    "default": null,
+                    "help": "",
+                    "type": "NodeTrait",
+                    "type_str": "<podpac.core.utils.NodeTrait object at 0x7efdef9a0fa0>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": "\n    Group a time-dependent source node and then compute a statistic for each result.\n\n    Attributes\n    ----------\n    custom_reduce_fn : function\n        required if reduce_fn is 'custom'.\n    groupby : str\n        datetime sub-accessor. Currently 'dayofyear' is the enabled option.\n    reduce_fn : str\n        builtin xarray groupby reduce function, or 'custom'.\n    source : podpac.Node\n        Source node\n    ",
+            "module": "podpac.core.algorithm.stats.GroupReduce"
+        },
+        "Kurtosis": {
+            "attrs": {
+                "dims": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdef939b80>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "source": {
+                    "default": null,
+                    "help": "",
+                    "type": "NodeTrait",
+                    "type_str": "<podpac.core.utils.NodeTrait object at 0x7efdef9a0fa0>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": "Computes the kurtosis across dimension(s)\n\n    TODO NaN behavior when there is NO data (currently different in reduce and reduce_chunked)\n    ",
+            "module": "podpac.core.algorithm.stats.Kurtosis"
+        },
+        "Mask": {
+            "attrs": {
+                "bool_op": {
+                    "default": "==",
+                    "help": "",
+                    "type": "Enum",
+                    "type_str": "<traitlets.traitlets.Enum object at 0x7efdef9aba00>",
+                    "values": [
+                        "==",
+                        "<",
+                        "<=",
+                        ">",
+                        ">="
+                    ]
+                },
+                "bool_val": {
+                    "default": 1,
+                    "help": "",
+                    "type": "Float",
+                    "type_str": "<traitlets.traitlets.Float object at 0x7efdef9ab9a0>",
+                    "values": null
+                },
+                "in_place": {
+                    "default": false,
+                    "help": "",
+                    "type": "Bool",
+                    "type_str": "<traitlets.traitlets.Bool object at 0x7efdef9aba60>",
+                    "values": null
+                },
+                "mask": {
+                    "default": null,
+                    "help": "",
+                    "type": "NodeTrait",
+                    "type_str": "<podpac.core.utils.NodeTrait object at 0x7efdef9ab940>",
+                    "values": null
+                },
+                "masked_val": {
+                    "default": null,
+                    "help": "",
+                    "type": "Float",
+                    "type_str": "<traitlets.traitlets.Float object at 0x7efdef9ab970>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "source": {
+                    "default": null,
+                    "help": "",
+                    "type": "NodeTrait",
+                    "type_str": "<podpac.core.utils.NodeTrait object at 0x7efdef9ab8e0>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": "\n    Masks the `source` based on a boolean expression involving the `mask`\n    (i.e. source[mask <bool_op> <bool_val> ] = <masked_val>).\n    For a normal boolean mask input, default values for `bool_op`, `bool_val` and `masked_val` can be used.\n\n    Attributes\n    ----------\n    source : podpac.Node\n        The source that will be masked\n    mask : podpac.Node\n        The data that will be used to compute the mask\n    masked_val : float, optional\n        Default value is np.nan. The value that will replace the masked items.\n    bool_val : float, optional\n        Default value is 1. The value used to compare the mask when creating the boolean expression\n    bool_op : enum, optional\n        Default value is '=='. One of ['==', '<', '<=', '>', '>=']\n    in_place : bool, optional\n        Default is False. If True, the source array will be changed in-place, which could affect the value of the source\n        in other parts of the pipeline.\n\n    Examples\n    ----------\n    # Mask data from a boolean data node using the default behavior.\n    # Create a boolean masked Node (as an example)\n    b = Arithmetic(A=SinCoords(), eqn='A>0)\n    # Create the source node\n    a = Arange()\n    masked = Mask(source=a, mask=b)\n\n    # Create a node that make the following substitution \"a[b > 0] = np.nan\"\n    a = Arange()\n    b = SinCoords()\n    masked = Mask(source=a, mask=b,\n                  masked_val=np.nan,\n                  bool_val=0, bool_op='>'\n                  in_place=True)\n\n    ",
+            "module": "podpac.core.algorithm.generic.Mask"
+        },
+        "Max": {
+            "attrs": {
+                "dims": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdef939b80>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "source": {
+                    "default": null,
+                    "help": "",
+                    "type": "NodeTrait",
+                    "type_str": "<podpac.core.utils.NodeTrait object at 0x7efdef9a0fa0>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": "Computes the maximum across dimension(s)",
+            "module": "podpac.core.algorithm.stats.Max"
+        },
+        "Mean": {
+            "attrs": {
+                "dims": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdef939b80>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "source": {
+                    "default": null,
+                    "help": "",
+                    "type": "NodeTrait",
+                    "type_str": "<podpac.core.utils.NodeTrait object at 0x7efdef9a0fa0>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": "Computes the mean across dimension(s)",
+            "module": "podpac.core.algorithm.stats.Mean"
+        },
+        "Median": {
+            "attrs": {
+                "dims": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdef939b80>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "source": {
+                    "default": null,
+                    "help": "",
+                    "type": "NodeTrait",
+                    "type_str": "<podpac.core.utils.NodeTrait object at 0x7efdef9a0fa0>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": "Computes the median across dimension(s)\n\n    Example\n    ---------\n    coords.dims == ['lat', 'lon', 'time']\n    median = Median(source=node, dims=['lat', 'lon'])\n    o = median.eval(coords)\n    o.dims == ['time']\n    ",
+            "module": "podpac.core.algorithm.stats.Median"
+        },
+        "Min": {
+            "attrs": {
+                "dims": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdef939b80>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "source": {
+                    "default": null,
+                    "help": "",
+                    "type": "NodeTrait",
+                    "type_str": "<podpac.core.utils.NodeTrait object at 0x7efdef9a0fa0>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": "Computes the minimum across dimension(s)",
+            "module": "podpac.core.algorithm.stats.Min"
+        },
+        "Reproject": {
+            "attrs": {
+                "coordinates": {
+                    "default": null,
+                    "help": "Coordinates used to evaluate the source. These can be specified as a dictionary,\n                           json-formatted string, PODPAC Coordinates, or a PODPAC Node, where the node MUST implement\n                           the 'coordinates' attribute",
+                    "type": [
+                        "NodeTrait",
+                        "Dict",
+                        "Unicode",
+                        "Instance"
+                    ],
+                    "type_str": "Union",
+                    "values": null
+                },
+                "interpolation": {
+                    "default": "nearest",
+                    "help": "",
+                    "type": "InterpolationTrait",
+                    "type_str": "<podpac.core.interpolation.interpolation_manager.InterpolationTrait object at 0x7efdb46d9970>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "reproject_dims": {
+                    "default": null,
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb46d9c10>",
+                    "values": null
+                },
+                "source": {
+                    "default": null,
+                    "help": "",
+                    "type": "NodeTrait",
+                    "type_str": "<podpac.core.utils.NodeTrait object at 0x7efdb46d97c0>",
+                    "values": null
+                },
+                "source_id": {
+                    "default": "",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb46d9910>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": "\n    Create a Algorithm that evalutes a Node with one set of coordinates, and then interpolates it.\n    This can be used to bilinearly interpolate an averaged dataset, for example.\n\n    Attributes\n    ----------\n    source : Node\n        The source node. This node will use it's own, specified interpolation scheme\n    interpolation : str\n        Type of interpolation method to use for the interpolation\n    coordinates : Coordinates, Node, str, dict\n        Coordinates used to evaluate the source. These can be specified as a dictionary, json-formatted string,\n        PODPAC Coordinates, or a PODPAC Node, where the node MUST implement the 'coordinates' attribute.\n    reproject_dims : list\n        Dimensions to reproject. The source will be evaluated with the reprojection coordinates in these dims\n        and the requested coordinates for any other dims.\n    ",
+            "module": "podpac.core.algorithm.reprojection.Reproject"
+        },
+        "ResampleReduce": {
+            "attrs": {
+                "coordinates_source": {
+                    "default": null,
+                    "help": "",
+                    "type": "NodeTrait",
+                    "type_str": "<podpac.core.utils.NodeTrait object at 0x7efdb5b83700>",
+                    "values": null
+                },
+                "custom_reduce_fn": {
+                    "default": null,
+                    "help": "",
+                    "type": "Any",
+                    "type_str": "<traitlets.traitlets.Any object at 0x7efdb5b83940>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "reduce_fn": {
+                    "default": null,
+                    "help": "",
+                    "type": "CaselessStrEnum",
+                    "type_str": "<traitlets.traitlets.CaselessStrEnum object at 0x7efdb5b83910>",
+                    "values": [
+                        "all",
+                        "any",
+                        "count",
+                        "max",
+                        "mean",
+                        "median",
+                        "min",
+                        "prod",
+                        "std",
+                        "sum",
+                        "var",
+                        "custom"
+                    ]
+                },
+                "resample": {
+                    "default": "",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb5b838e0>",
+                    "values": null
+                },
+                "source": {
+                    "default": null,
+                    "help": "",
+                    "type": "NodeTrait",
+                    "type_str": "<podpac.core.utils.NodeTrait object at 0x7efdef9a0fa0>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": "\n    Resample a time-dependent source node using a statistical operation to achieve the result.\n\n    Attributes\n    ----------\n    custom_reduce_fn : function\n        required if reduce_fn is 'custom'.\n    resample : str\n        datetime sub-accessor. Currently 'dayofyear' is the enabled option.\n    reduce_fn : str\n        builtin xarray groupby reduce function, or 'custom'.\n    source : podpac.Node\n        Source node\n    ",
+            "module": "podpac.core.algorithm.stats.ResampleReduce"
+        },
+        "SelectCoordinates": {
+            "attrs": {
+                "alt": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb5b83130>",
+                    "values": null
+                },
+                "coordinates_source": {
+                    "default": null,
+                    "help": "",
+                    "type": "NodeTrait",
+                    "type_str": "<podpac.core.utils.NodeTrait object at 0x7efdb5b834c0>",
+                    "values": null
+                },
+                "lat": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb5b831c0>",
+                    "values": null
+                },
+                "lon": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb5b83190>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "source": {
+                    "default": null,
+                    "help": "",
+                    "type": "NodeTrait",
+                    "type_str": "<podpac.core.utils.NodeTrait object at 0x7efdef9a0fa0>",
+                    "values": null
+                },
+                "substitute_eval_coords": {
+                    "default": false,
+                    "help": "",
+                    "type": "Bool",
+                    "type_str": "<traitlets.traitlets.Bool object at 0x7efdb5b83100>",
+                    "values": null
+                },
+                "time": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb5b83160>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": "Evaluate a source node with select coordinates.\n\n    While this is simple to do when\n    evaluating a single node (just provide the coordinates), this functionality is needed for nodes buried deeper in a\n    pipeline. For example, if a single spatial reference point is used for a particular comparison, and this reference\n    point is different than the requested coordinates, we need to explicitly select those coordinates using this Node.\n\n    lat, lon, time, alt : List\n        Selection parameters for the given dimension: The options are::\n         * [value]: select this coordinate value\n         * [start, stop]: select the available source coordinates within the given bounds\n         * [start, stop, step]: select uniform coordinates defined by the given start, stop, and step\n    ",
+            "module": "podpac.core.algorithm.coord_select.SelectCoordinates"
+        },
+        "SinCoords": {
+            "attrs": {
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": "A simple test node that creates a data based on coordinates and trigonometric (sin) functions.",
+            "module": "podpac.core.algorithm.utility.SinCoords"
+        },
+        "Skew": {
+            "attrs": {
+                "dims": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdef939b80>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "source": {
+                    "default": null,
+                    "help": "",
+                    "type": "NodeTrait",
+                    "type_str": "<podpac.core.utils.NodeTrait object at 0x7efdef9a0fa0>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": "\n    Computes the skew across dimension(s)\n\n    TODO NaN behavior when there is NO data (currently different in reduce and reduce_chunked)\n    ",
+            "module": "podpac.core.algorithm.stats.Skew"
+        },
+        "StandardDeviation": {
+            "attrs": {
+                "dims": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdef939b80>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "source": {
+                    "default": null,
+                    "help": "",
+                    "type": "NodeTrait",
+                    "type_str": "<podpac.core.utils.NodeTrait object at 0x7efdef9a0fa0>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": "Computes the standard deviation across dimension(s)",
+            "module": "podpac.core.algorithm.stats.StandardDeviation"
+        },
+        "Sum": {
+            "attrs": {
+                "dims": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdef939b80>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "source": {
+                    "default": null,
+                    "help": "",
+                    "type": "NodeTrait",
+                    "type_str": "<podpac.core.utils.NodeTrait object at 0x7efdef9a0fa0>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": "Computes the sum across dimension(s)",
+            "module": "podpac.core.algorithm.stats.Sum"
+        },
+        "TransformTimeUnits": {
+            "attrs": {
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "source": {
+                    "default": null,
+                    "help": "",
+                    "type": "NodeTrait",
+                    "type_str": "<podpac.core.utils.NodeTrait object at 0x7efdef9a0fa0>",
+                    "values": null
+                },
+                "substitute_eval_coords": {
+                    "default": false,
+                    "help": "",
+                    "type": "Bool",
+                    "type_str": "<traitlets.traitlets.Bool object at 0x7efdb5b83100>",
+                    "values": null
+                },
+                "time_units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Enum",
+                    "type_str": "<traitlets.traitlets.Enum object at 0x7efdb5b82b20>",
+                    "values": [
+                        "day",
+                        "dayofweek",
+                        "dayofyear",
+                        "daysinmonth",
+                        "microsecond",
+                        "minute",
+                        "month",
+                        "nanosecond",
+                        "quarter",
+                        "season",
+                        "second",
+                        "time",
+                        "week",
+                        "weekday",
+                        "weekday_name",
+                        "weekofyear",
+                        "year"
+                    ]
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": null,
+            "module": "podpac.core.algorithm.coord_select.TransformTimeUnits"
+        },
+        "UnaryAlgorithm": {
+            "attrs": {
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "source": {
+                    "default": null,
+                    "help": "",
+                    "type": "NodeTrait",
+                    "type_str": "<podpac.core.utils.NodeTrait object at 0x7efdef9a0fa0>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": "\n    Base class for computation nodes that take a single source and transform it.\n\n    Attributes\n    ----------\n    source : Node\n        The source node\n\n    Notes\n    ------\n    Developers of new Algorithm nodes need to implement the `eval` method.\n    ",
+            "module": "podpac.core.algorithm.algorithm.UnaryAlgorithm"
+        },
+        "Variance": {
+            "attrs": {
+                "dims": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdef939b80>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "source": {
+                    "default": null,
+                    "help": "",
+                    "type": "NodeTrait",
+                    "type_str": "<podpac.core.utils.NodeTrait object at 0x7efdef9a0fa0>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": "Computes the variance across dimension(s)",
+            "module": "podpac.core.algorithm.stats.Variance"
+        },
+        "YearSubstituteCoordinates": {
+            "attrs": {
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "source": {
+                    "default": null,
+                    "help": "",
+                    "type": "NodeTrait",
+                    "type_str": "<podpac.core.utils.NodeTrait object at 0x7efdef9a0fa0>",
+                    "values": null
+                },
+                "substitute_eval_coords": {
+                    "default": false,
+                    "help": "",
+                    "type": "Bool",
+                    "type_str": "<traitlets.traitlets.Bool object at 0x7efdb5b83100>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                },
+                "year": {
+                    "default": "",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb5b820a0>",
+                    "values": null
+                }
+            },
+            "help": null,
+            "module": "podpac.core.algorithm.coord_select.YearSubstituteCoordinates"
+        }
+    },
+    "compositors": {
+        "OrderedCompositor": {
+            "attrs": {
+                "dims": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb46b9490>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "source_coordinates": {
+                    "default": null,
+                    "help": "",
+                    "type": "Coordinates",
+                    "type_str": "<class 'podpac.core.coordinates.coordinates.Coordinates'>",
+                    "values": null
+                },
+                "sources": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb46b9340>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": "Compositor that combines sources based on their order in self.sources.\n\n    The sources should generally be interpolated before being composited (i.e. not raw datasources).\n\n    Attributes\n    ----------\n    sources : list\n        Source nodes, in order of preference. Later sources are only used where earlier sources do not provide data.\n    source_coordinates : :class:`podpac.Coordinates`\n        Coordinates that make each source unique. Must the same size as ``sources`` and single-dimensional. Optional.\n    multithreading : bool, optional\n        Default is True. If True, will always evaluate the compositor in serial, ignoring any MULTITHREADING settings\n\n    ",
+            "module": "podpac.core.compositor.ordered_compositor.OrderedCompositor"
+        },
+        "TileCompositor": {
+            "attrs": {
+                "dims": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb46b9490>",
+                    "values": null
+                },
+                "interpolation": {
+                    "default": "nearest",
+                    "help": "",
+                    "type": "InterpolationTrait",
+                    "type_str": "<podpac.core.interpolation.interpolation_manager.InterpolationTrait object at 0x7efdb46d9760>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "source_coordinates": {
+                    "default": null,
+                    "help": "",
+                    "type": "Coordinates",
+                    "type_str": "<class 'podpac.core.coordinates.coordinates.Coordinates'>",
+                    "values": null
+                },
+                "sources": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb46b9340>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": null,
+            "module": "podpac.core.compositor.tile_compositor.TileCompositor"
+        },
+        "TileCompositorRaw": {
+            "attrs": {
+                "dims": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb46b9490>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "source_coordinates": {
+                    "default": null,
+                    "help": "",
+                    "type": "Coordinates",
+                    "type_str": "<class 'podpac.core.coordinates.coordinates.Coordinates'>",
+                    "values": null
+                },
+                "sources": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb46b9340>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": "Compositor that combines tiled sources.\n\n    The requested data does not need to be interpolated by the sources before being composited\n\n    Attributes\n    ----------\n    sources : list\n        Source nodes (tiles). The sources should not be overlapping.\n    source_coordinates : :class:`podpac.Coordinates`\n        Coordinates that make each source unique. Must the same size as ``sources`` and single-dimensional. Optional.\n    ",
+            "module": "podpac.core.compositor.tile_compositor.TileCompositorRaw"
+        }
+    },
+    "data": {
+        "Array": {
+            "attrs": {
+                "boundary": {
+                    "default": {},
+                    "help": "",
+                    "type": "Dict",
+                    "type_str": "<traitlets.traitlets.Dict object at 0x7efdb46f96a0>",
+                    "values": null
+                },
+                "coordinates": {
+                    "default": null,
+                    "help": "",
+                    "type": "Coordinates",
+                    "type_str": "<class 'podpac.core.coordinates.coordinates.Coordinates'>",
+                    "values": null
+                },
+                "interpolation": {
+                    "default": "nearest",
+                    "help": "",
+                    "type": "InterpolationTrait",
+                    "type_str": "<podpac.core.interpolation.interpolation_manager.InterpolationTrait object at 0x7efdb46d9760>",
+                    "values": null
+                },
+                "nan_val": {
+                    "default": "nan",
+                    "help": "",
+                    "type": "Any",
+                    "type_str": "<traitlets.traitlets.Any object at 0x7efdb46f9670>",
+                    "values": null
+                },
+                "nan_vals": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb46f9610>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "source": {
+                    "default": null,
+                    "help": "",
+                    "type": "ArrayTrait",
+                    "type_str": "<podpac.core.utils.ArrayTrait object at 0x7efdb46f9c40>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": " Array datasource with interpolation. ",
+            "module": "podpac.core.data.array_source.Array"
+        },
+        "CSV": {
+            "attrs": {
+                "alt_key": {
+                    "default": "alt",
+                    "help": "",
+                    "type": [
+                        "Unicode",
+                        "Int"
+                    ],
+                    "type_str": "Union",
+                    "values": null
+                },
+                "anon": {
+                    "default": false,
+                    "help": "",
+                    "type": "Bool",
+                    "type_str": "<traitlets.traitlets.Bool object at 0x7efdb46e9550>",
+                    "values": null
+                },
+                "boundary": {
+                    "default": {},
+                    "help": "",
+                    "type": "Dict",
+                    "type_str": "<traitlets.traitlets.Dict object at 0x7efdb46f96a0>",
+                    "values": null
+                },
+                "cf_calendar": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f970>",
+                    "values": null
+                },
+                "cf_time": {
+                    "default": false,
+                    "help": "",
+                    "type": "Bool",
+                    "type_str": "<traitlets.traitlets.Bool object at 0x7efdb470f910>",
+                    "values": null
+                },
+                "cf_units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f940>",
+                    "values": null
+                },
+                "crs": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f8e0>",
+                    "values": null
+                },
+                "data_key": {
+                    "default": "",
+                    "help": "",
+                    "type": [
+                        "Unicode",
+                        "Int",
+                        "List",
+                        "List"
+                    ],
+                    "type_str": "Union",
+                    "values": null
+                },
+                "header": {
+                    "default": 0,
+                    "help": "",
+                    "type": "Any",
+                    "type_str": "<traitlets.traitlets.Any object at 0x7efdb468daf0>",
+                    "values": null
+                },
+                "interpolation": {
+                    "default": "nearest",
+                    "help": "",
+                    "type": "InterpolationTrait",
+                    "type_str": "<podpac.core.interpolation.interpolation_manager.InterpolationTrait object at 0x7efdb46d9760>",
+                    "values": null
+                },
+                "lat_key": {
+                    "default": "lat",
+                    "help": "",
+                    "type": [
+                        "Unicode",
+                        "Int"
+                    ],
+                    "type_str": "Union",
+                    "values": null
+                },
+                "lon_key": {
+                    "default": "lon",
+                    "help": "",
+                    "type": [
+                        "Unicode",
+                        "Int"
+                    ],
+                    "type_str": "Union",
+                    "values": null
+                },
+                "nan_val": {
+                    "default": "nan",
+                    "help": "",
+                    "type": "Any",
+                    "type_str": "<traitlets.traitlets.Any object at 0x7efdb46f9670>",
+                    "values": null
+                },
+                "nan_vals": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb46f9610>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "skip_validation": {
+                    "default": false,
+                    "help": "",
+                    "type": "Bool",
+                    "type_str": "<traitlets.traitlets.Bool object at 0x7efdb470f9a0>",
+                    "values": null
+                },
+                "source": {
+                    "default": "",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f310>",
+                    "values": null
+                },
+                "time_key": {
+                    "default": "time",
+                    "help": "",
+                    "type": [
+                        "Unicode",
+                        "Int"
+                    ],
+                    "type_str": "Union",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": " CSV datasource with interpolation. ",
+            "module": "podpac.core.data.csv_source.CSV"
+        },
+        "DataSource": {
+            "attrs": {
+                "boundary": {
+                    "default": {},
+                    "help": "",
+                    "type": "Dict",
+                    "type_str": "<traitlets.traitlets.Dict object at 0x7efdb46f96a0>",
+                    "values": null
+                },
+                "nan_val": {
+                    "default": "nan",
+                    "help": "",
+                    "type": "Any",
+                    "type_str": "<traitlets.traitlets.Any object at 0x7efdb46f9670>",
+                    "values": null
+                },
+                "nan_vals": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb46f9610>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": "Base node for any data obtained directly from a single source.\n\n    Parameters\n    ----------\n    source : Any\n        The location of the source. Depending on the child node this can be a filepath,\n        numpy array, or dictionary as a few examples.\n    coordinates : :class:`podpac.Coordinates`\n        The coordinates of the data source.\n    nan_vals : List, optional\n        List of values from source data that should be interpreted as 'no data' or 'nans'\n    coordinate_index_type : str, optional\n        Type of index to use for data source. Possible values are ``['slice', 'numpy', 'xarray']``\n        Default is 'numpy', which allows a tuple of integer indices.\n    cache_coordinates : bool\n        Whether to cache coordinates using the podpac ``cache_ctrl``. Default False.\n    cache_output : bool\n        Should the node's output be cached? If not provided or None, uses default based on\n        settings[\"CACHE_DATASOURCE_OUTPUT_DEFAULT\"]. If True, outputs will be cached and retrieved from cache. If False,\n        outputs will not be cached OR retrieved from cache (even if they exist in cache).\n\n    Notes\n    -----\n    Custom DataSource Nodes must implement the :meth:`get_data` and :meth:`get_coordinates` methods.\n    ",
+            "module": "podpac.core.data.datasource.DataSource"
+        },
+        "Dataset": {
+            "attrs": {
+                "alt_key": {
+                    "default": "alt",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f8b0>",
+                    "values": null
+                },
+                "anon": {
+                    "default": false,
+                    "help": "",
+                    "type": "Bool",
+                    "type_str": "<traitlets.traitlets.Bool object at 0x7efdb46e9550>",
+                    "values": null
+                },
+                "boundary": {
+                    "default": {},
+                    "help": "",
+                    "type": "Dict",
+                    "type_str": "<traitlets.traitlets.Dict object at 0x7efdb46f96a0>",
+                    "values": null
+                },
+                "cf_calendar": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f970>",
+                    "values": null
+                },
+                "cf_time": {
+                    "default": false,
+                    "help": "",
+                    "type": "Bool",
+                    "type_str": "<traitlets.traitlets.Bool object at 0x7efdb470f910>",
+                    "values": null
+                },
+                "cf_units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f940>",
+                    "values": null
+                },
+                "crs": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f8e0>",
+                    "values": null
+                },
+                "data_key": {
+                    "default": "",
+                    "help": "",
+                    "type": [
+                        "Unicode",
+                        "List"
+                    ],
+                    "type_str": "Union",
+                    "values": null
+                },
+                "infer_podpac_coords": {
+                    "default": false,
+                    "help": "",
+                    "type": "Bool",
+                    "type_str": "<traitlets.traitlets.Bool object at 0x7efdb469a7c0>",
+                    "values": null
+                },
+                "interpolation": {
+                    "default": "nearest",
+                    "help": "",
+                    "type": "InterpolationTrait",
+                    "type_str": "<podpac.core.interpolation.interpolation_manager.InterpolationTrait object at 0x7efdb46d9760>",
+                    "values": null
+                },
+                "lat_key": {
+                    "default": "lat",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f7f0>",
+                    "values": null
+                },
+                "lon_key": {
+                    "default": "lon",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f850>",
+                    "values": null
+                },
+                "nan_val": {
+                    "default": "nan",
+                    "help": "",
+                    "type": "Any",
+                    "type_str": "<traitlets.traitlets.Any object at 0x7efdb46f9670>",
+                    "values": null
+                },
+                "nan_vals": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb46f9610>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "selection": {
+                    "default": null,
+                    "help": "",
+                    "type": "Dict",
+                    "type_str": "<traitlets.traitlets.Dict object at 0x7efdb469a760>",
+                    "values": null
+                },
+                "skip_validation": {
+                    "default": false,
+                    "help": "",
+                    "type": "Bool",
+                    "type_str": "<traitlets.traitlets.Bool object at 0x7efdb470f9a0>",
+                    "values": null
+                },
+                "source": {
+                    "default": "",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f310>",
+                    "values": null
+                },
+                "time_key": {
+                    "default": "time",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f880>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": " xarray dataset source with interpolation. ",
+            "module": "podpac.core.data.dataset_source.Dataset"
+        },
+        "H5PY": {
+            "attrs": {
+                "alt_key": {
+                    "default": "alt",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f8b0>",
+                    "values": null
+                },
+                "boundary": {
+                    "default": {},
+                    "help": "",
+                    "type": "Dict",
+                    "type_str": "<traitlets.traitlets.Dict object at 0x7efdb46f96a0>",
+                    "values": null
+                },
+                "cf_calendar": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f970>",
+                    "values": null
+                },
+                "cf_time": {
+                    "default": false,
+                    "help": "",
+                    "type": "Bool",
+                    "type_str": "<traitlets.traitlets.Bool object at 0x7efdb470f910>",
+                    "values": null
+                },
+                "cf_units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f940>",
+                    "values": null
+                },
+                "crs": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f8e0>",
+                    "values": null
+                },
+                "data_key": {
+                    "default": "",
+                    "help": "",
+                    "type": [
+                        "Unicode",
+                        "List"
+                    ],
+                    "type_str": "Union",
+                    "values": null
+                },
+                "interpolation": {
+                    "default": "nearest",
+                    "help": "",
+                    "type": "InterpolationTrait",
+                    "type_str": "<podpac.core.interpolation.interpolation_manager.InterpolationTrait object at 0x7efdb46d9760>",
+                    "values": null
+                },
+                "lat_key": {
+                    "default": "lat",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f7f0>",
+                    "values": null
+                },
+                "lon_key": {
+                    "default": "lon",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f850>",
+                    "values": null
+                },
+                "nan_val": {
+                    "default": "nan",
+                    "help": "",
+                    "type": "Any",
+                    "type_str": "<traitlets.traitlets.Any object at 0x7efdb46f9670>",
+                    "values": null
+                },
+                "nan_vals": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb46f9610>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "skip_validation": {
+                    "default": false,
+                    "help": "",
+                    "type": "Bool",
+                    "type_str": "<traitlets.traitlets.Bool object at 0x7efdb470f9a0>",
+                    "values": null
+                },
+                "source": {
+                    "default": "",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f310>",
+                    "values": null
+                },
+                "time_key": {
+                    "default": "time",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f880>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": " h5py datasource with interpolation. ",
+            "module": "podpac.core.data.h5py_source.H5PY"
+        },
+        "OGR": {
+            "attrs": {
+                "attribute": {
+                    "default": "",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb46aa100>",
+                    "values": null
+                },
+                "layer": {
+                    "default": "",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb46a4fa0>",
+                    "values": null
+                },
+                "nan_val": {
+                    "default": "nan",
+                    "help": "",
+                    "type": "Any",
+                    "type_str": "<traitlets.traitlets.Any object at 0x7efdb46aa160>",
+                    "values": null
+                },
+                "nan_vals": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb46aa130>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "source": {
+                    "default": "",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb46a4f70>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": null,
+            "module": "podpac.core.data.ogr.OGR"
+        },
+        "PyDAP": {
+            "attrs": {
+                "boundary": {
+                    "default": {},
+                    "help": "",
+                    "type": "Dict",
+                    "type_str": "<traitlets.traitlets.Dict object at 0x7efdb46f96a0>",
+                    "values": null
+                },
+                "data_key": {
+                    "default": "",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb4703190>",
+                    "values": null
+                },
+                "interpolation": {
+                    "default": "nearest",
+                    "help": "",
+                    "type": "InterpolationTrait",
+                    "type_str": "<podpac.core.interpolation.interpolation_manager.InterpolationTrait object at 0x7efdb46d9760>",
+                    "values": null
+                },
+                "nan_val": {
+                    "default": "nan",
+                    "help": "",
+                    "type": "Any",
+                    "type_str": "<traitlets.traitlets.Any object at 0x7efdb46f9670>",
+                    "values": null
+                },
+                "nan_vals": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb46f9610>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "server_throttle_retries": {
+                    "default": 100,
+                    "help": "Number of retries for a throttled server.",
+                    "type": "Int",
+                    "type_str": "<traitlets.traitlets.Int object at 0x7efdb47031f0>",
+                    "values": null
+                },
+                "server_throttle_sleep_time": {
+                    "default": 0.001,
+                    "help": "Some server have a throttling time for requests per period. ",
+                    "type": "Float",
+                    "type_str": "<traitlets.traitlets.Float object at 0x7efdb47031c0>",
+                    "values": null
+                },
+                "source": {
+                    "default": "",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb4703160>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": " OpenDAP datasource with interpolation. ",
+            "module": "podpac.core.data.pydap_source.PyDAP"
+        },
+        "Rasterio": {
+            "attrs": {
+                "anon": {
+                    "default": false,
+                    "help": "",
+                    "type": "Bool",
+                    "type_str": "<traitlets.traitlets.Bool object at 0x7efdb46e9550>",
+                    "values": null
+                },
+                "aws_https": {
+                    "default": true,
+                    "help": "",
+                    "type": "Bool",
+                    "type_str": "<traitlets.traitlets.Bool object at 0x7efdb470fca0>",
+                    "values": null
+                },
+                "band": {
+                    "default": 0,
+                    "help": "",
+                    "type": "CInt",
+                    "type_str": "<traitlets.traitlets.CInt object at 0x7efdb4703a90>",
+                    "values": null
+                },
+                "boundary": {
+                    "default": {},
+                    "help": "",
+                    "type": "Dict",
+                    "type_str": "<traitlets.traitlets.Dict object at 0x7efdb46f96a0>",
+                    "values": null
+                },
+                "crs": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb4703ac0>",
+                    "values": null
+                },
+                "interpolation": {
+                    "default": "nearest",
+                    "help": "",
+                    "type": "InterpolationTrait",
+                    "type_str": "<podpac.core.interpolation.interpolation_manager.InterpolationTrait object at 0x7efdb46d9760>",
+                    "values": null
+                },
+                "nan_val": {
+                    "default": "nan",
+                    "help": "",
+                    "type": "Any",
+                    "type_str": "<traitlets.traitlets.Any object at 0x7efdb46f9670>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "prefer_overviews": {
+                    "default": false,
+                    "help": "",
+                    "type": "Bool",
+                    "type_str": "<traitlets.traitlets.Bool object at 0x7efdb470fcd0>",
+                    "values": null
+                },
+                "prefer_overviews_closest": {
+                    "default": false,
+                    "help": "",
+                    "type": "Bool",
+                    "type_str": "<traitlets.traitlets.Bool object at 0x7efdb470fd00>",
+                    "values": null
+                },
+                "source": {
+                    "default": "",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f310>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": " Rasterio datasource with interpolation. ",
+            "module": "podpac.core.data.rasterio_source.Rasterio"
+        },
+        "ReprojectedSource": {
+            "attrs": {
+                "boundary": {
+                    "default": {},
+                    "help": "",
+                    "type": "Dict",
+                    "type_str": "<traitlets.traitlets.Dict object at 0x7efdb46f96a0>",
+                    "values": null
+                },
+                "nan_val": {
+                    "default": "nan",
+                    "help": "",
+                    "type": "Any",
+                    "type_str": "<traitlets.traitlets.Any object at 0x7efdb46f9670>",
+                    "values": null
+                },
+                "nan_vals": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb46f9610>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "reprojected_coordinates": {
+                    "default": null,
+                    "help": "",
+                    "type": "Coordinates",
+                    "type_str": "<class 'podpac.core.coordinates.coordinates.Coordinates'>",
+                    "values": null
+                },
+                "source": {
+                    "default": null,
+                    "help": "",
+                    "type": "NodeTrait",
+                    "type_str": "<podpac.core.utils.NodeTrait object at 0x7efdb46aa6a0>",
+                    "values": null
+                },
+                "source_interpolation": {
+                    "default": "nearest",
+                    "help": "",
+                    "type": "InterpolationTrait",
+                    "type_str": "<podpac.core.interpolation.interpolation_manager.InterpolationTrait object at 0x7efdb46aa700>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": "Create a DataSource with a different resolution from another Node. This can be used to bilinearly interpolated a\n    dataset after averaging over a larger area.\n\n    Attributes\n    ----------\n    source : Node\n        The source node\n    source_interpolation : str\n        Type of interpolation method to use for the source node\n    reprojected_coordinates : :class:`podpac.Coordinates`\n        Coordinates where the source node should be evaluated.\n    ",
+            "module": "podpac.core.data.reprojection.ReprojectedSource"
+        },
+        "WCS": {
+            "attrs": {
+                "allow_mock_client": {
+                    "default": false,
+                    "help": "",
+                    "type": "Bool",
+                    "type_str": "<traitlets.traitlets.Bool object at 0x7efdb46a4a00>",
+                    "values": null
+                },
+                "boundary": {
+                    "default": {},
+                    "help": "",
+                    "type": "Dict",
+                    "type_str": "<traitlets.traitlets.Dict object at 0x7efdb46f96a0>",
+                    "values": null
+                },
+                "interpolation": {
+                    "default": "nearest",
+                    "help": "",
+                    "type": "InterpolationTrait",
+                    "type_str": "<podpac.core.interpolation.interpolation_manager.InterpolationTrait object at 0x7efdb46d9760>",
+                    "values": null
+                },
+                "layer": {
+                    "default": "",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb46a4970>",
+                    "values": null
+                },
+                "nan_val": {
+                    "default": "nan",
+                    "help": "",
+                    "type": "Any",
+                    "type_str": "<traitlets.traitlets.Any object at 0x7efdb46f9670>",
+                    "values": null
+                },
+                "nan_vals": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb46f9610>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "source": {
+                    "default": "",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb46a4940>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                },
+                "version": {
+                    "default": "1.0.0",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb46a49a0>",
+                    "values": null
+                }
+            },
+            "help": " WCS datasource with podpac interpolation. ",
+            "module": "podpac.core.data.ogc.WCS"
+        },
+        "Zarr": {
+            "attrs": {
+                "alt_key": {
+                    "default": "alt",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f8b0>",
+                    "values": null
+                },
+                "anon": {
+                    "default": false,
+                    "help": "",
+                    "type": "Bool",
+                    "type_str": "<traitlets.traitlets.Bool object at 0x7efdb46e9550>",
+                    "values": null
+                },
+                "boundary": {
+                    "default": {},
+                    "help": "",
+                    "type": "Dict",
+                    "type_str": "<traitlets.traitlets.Dict object at 0x7efdb46f96a0>",
+                    "values": null
+                },
+                "cf_calendar": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f970>",
+                    "values": null
+                },
+                "cf_time": {
+                    "default": false,
+                    "help": "",
+                    "type": "Bool",
+                    "type_str": "<traitlets.traitlets.Bool object at 0x7efdb470f910>",
+                    "values": null
+                },
+                "cf_units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f940>",
+                    "values": null
+                },
+                "crs": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f8e0>",
+                    "values": null
+                },
+                "data_key": {
+                    "default": "",
+                    "help": "",
+                    "type": [
+                        "Unicode",
+                        "List"
+                    ],
+                    "type_str": "Union",
+                    "values": null
+                },
+                "interpolation": {
+                    "default": "nearest",
+                    "help": "",
+                    "type": "InterpolationTrait",
+                    "type_str": "<podpac.core.interpolation.interpolation_manager.InterpolationTrait object at 0x7efdb46d9760>",
+                    "values": null
+                },
+                "lat_key": {
+                    "default": "lat",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f7f0>",
+                    "values": null
+                },
+                "lon_key": {
+                    "default": "lon",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f850>",
+                    "values": null
+                },
+                "nan_val": {
+                    "default": "nan",
+                    "help": "",
+                    "type": "Any",
+                    "type_str": "<traitlets.traitlets.Any object at 0x7efdb46f9670>",
+                    "values": null
+                },
+                "nan_vals": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb46f9610>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "skip_validation": {
+                    "default": false,
+                    "help": "",
+                    "type": "Bool",
+                    "type_str": "<traitlets.traitlets.Bool object at 0x7efdb470f9a0>",
+                    "values": null
+                },
+                "source": {
+                    "default": "",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f310>",
+                    "values": null
+                },
+                "time_key": {
+                    "default": "time",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f880>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": " Zarr Datasource with Interpolation. ",
+            "module": "podpac.core.data.zarr_source.Zarr"
+        }
+    },
+    "datalib": {
+        "COSMOSStations": {
+            "attrs": {
+                "interpolation": {
+                    "default": "nearest",
+                    "help": "",
+                    "type": "InterpolationTrait",
+                    "type_str": "<podpac.core.interpolation.interpolation_manager.InterpolationTrait object at 0x7efdb46d9760>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": null,
+            "module": "podpac.datalib.cosmos_stations.COSMOSStations"
+        },
+        "DroughtCategory": {
+            "attrs": {
+                "d0": {
+                    "default": null,
+                    "help": "",
+                    "type": "NodeTrait",
+                    "type_str": "<podpac.core.utils.NodeTrait object at 0x7efdb464a970>",
+                    "values": null
+                },
+                "d1": {
+                    "default": null,
+                    "help": "",
+                    "type": "NodeTrait",
+                    "type_str": "<podpac.core.utils.NodeTrait object at 0x7efdb464a8e0>",
+                    "values": null
+                },
+                "d2": {
+                    "default": null,
+                    "help": "",
+                    "type": "NodeTrait",
+                    "type_str": "<podpac.core.utils.NodeTrait object at 0x7efdb464a910>",
+                    "values": null
+                },
+                "d3": {
+                    "default": null,
+                    "help": "",
+                    "type": "NodeTrait",
+                    "type_str": "<podpac.core.utils.NodeTrait object at 0x7efdb464a9a0>",
+                    "values": null
+                },
+                "d4": {
+                    "default": null,
+                    "help": "",
+                    "type": "NodeTrait",
+                    "type_str": "<podpac.core.utils.NodeTrait object at 0x7efdb464a9d0>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "soil_moisture": {
+                    "default": null,
+                    "help": "",
+                    "type": "NodeTrait",
+                    "type_str": "<podpac.core.utils.NodeTrait object at 0x7efdb464a850>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": null,
+            "module": "podpac.datalib.drought_monitor.DroughtCategory"
+        },
+        "DroughtMonitorCategory": {
+            "attrs": {
+                "alt_key": {
+                    "default": "alt",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f8b0>",
+                    "values": null
+                },
+                "anon": {
+                    "default": false,
+                    "help": "",
+                    "type": "Bool",
+                    "type_str": "<traitlets.traitlets.Bool object at 0x7efdb46e9550>",
+                    "values": null
+                },
+                "boundary": {
+                    "default": {},
+                    "help": "",
+                    "type": "Dict",
+                    "type_str": "<traitlets.traitlets.Dict object at 0x7efdb46f96a0>",
+                    "values": null
+                },
+                "cf_calendar": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f970>",
+                    "values": null
+                },
+                "cf_time": {
+                    "default": false,
+                    "help": "",
+                    "type": "Bool",
+                    "type_str": "<traitlets.traitlets.Bool object at 0x7efdb470f910>",
+                    "values": null
+                },
+                "cf_units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f940>",
+                    "values": null
+                },
+                "crs": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f8e0>",
+                    "values": null
+                },
+                "data_key": {
+                    "default": "",
+                    "help": "",
+                    "type": [
+                        "Unicode",
+                        "List"
+                    ],
+                    "type_str": "Union",
+                    "values": null
+                },
+                "interpolation": {
+                    "default": "nearest",
+                    "help": "",
+                    "type": "InterpolationTrait",
+                    "type_str": "<podpac.core.interpolation.interpolation_manager.InterpolationTrait object at 0x7efdb46d9760>",
+                    "values": null
+                },
+                "lat_key": {
+                    "default": "lat",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f7f0>",
+                    "values": null
+                },
+                "lon_key": {
+                    "default": "lon",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f850>",
+                    "values": null
+                },
+                "nan_val": {
+                    "default": "nan",
+                    "help": "",
+                    "type": "Any",
+                    "type_str": "<traitlets.traitlets.Any object at 0x7efdb46f9670>",
+                    "values": null
+                },
+                "nan_vals": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb46f9610>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "skip_validation": {
+                    "default": false,
+                    "help": "",
+                    "type": "Bool",
+                    "type_str": "<traitlets.traitlets.Bool object at 0x7efdb470f9a0>",
+                    "values": null
+                },
+                "source": {
+                    "default": "",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f310>",
+                    "values": null
+                },
+                "time_key": {
+                    "default": "time",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb470f880>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": null,
+            "module": "podpac.datalib.drought_monitor.DroughtMonitorCategory"
+        },
+        "EGI": {
+            "attrs": {
+                "base_url": {
+                    "default": "https://n5eil01u.ecs.nsidc.org/egi/request",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb4658100>",
+                    "values": null
+                },
+                "boundary": {
+                    "default": {},
+                    "help": "",
+                    "type": "Dict",
+                    "type_str": "<traitlets.traitlets.Dict object at 0x7efdb46f96a0>",
+                    "values": null
+                },
+                "data_key": {
+                    "default": "",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb4658160>",
+                    "values": null
+                },
+                "interpolation": {
+                    "default": "nearest",
+                    "help": "",
+                    "type": "InterpolationTrait",
+                    "type_str": "<podpac.core.interpolation.interpolation_manager.InterpolationTrait object at 0x7efdb46d9760>",
+                    "values": null
+                },
+                "lat_key": {
+                    "default": "",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb4658190>",
+                    "values": null
+                },
+                "lon_key": {
+                    "default": "",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb46581c0>",
+                    "values": null
+                },
+                "min_bounds_span": {
+                    "default": {},
+                    "help": "",
+                    "type": "Dict",
+                    "type_str": "<traitlets.traitlets.Dict object at 0x7efdb4658220>",
+                    "values": null
+                },
+                "nan_val": {
+                    "default": "nan",
+                    "help": "",
+                    "type": "Any",
+                    "type_str": "<traitlets.traitlets.Any object at 0x7efdb46f9670>",
+                    "values": null
+                },
+                "nan_vals": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb46f9610>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "short_name": {
+                    "default": "",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb4658130>",
+                    "values": null
+                },
+                "time_key": {
+                    "default": "",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb46581f0>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                },
+                "version": {
+                    "default": null,
+                    "help": "",
+                    "type": [
+                        "Unicode",
+                        "Int"
+                    ],
+                    "type_str": "Union",
+                    "values": null
+                }
+            },
+            "help": "\n    PODPAC DataSource node to access the NASA EGI Programmatic Interface\n    https://developer.earthdata.nasa.gov/sdps/programmatic-access-docs#cmrparameters\n\n    Parameters\n    ----------\n    short_name : str\n        Specifies the short name of the collection used to find granules for the coverage requested. Required.\n        See https://developer.earthdata.nasa.gov/sdps/programmatic-access-docs#cmrparameters\n    data_key : str\n        Path to the subset data layer or group for Parameter Subsetting. Required.\n        Equivalent to \"Coverage\" paramter described in\n        https://developer.earthdata.nasa.gov/sdps/programmatic-access-docs#cmrparameters\n    lat_key : str\n        Key for latitude data in endpoint HDF-5 file. Required.\n    lon_key : str\n        Key for longitude data in endpoint HDF-5 file. Required.\n    min_bounds_span: dict, optional\n        Default is {}. When specified, gives the minimum bounds that will be used for a coordinate in the EGI query, so\n        it works properly. If a user specified a lat,lon point, the EGI query may fail since the min/max values for\n        lat/lon are the same. When specified, these bounds will be padded by the following for latitude (as an example):\n        [lat - min_bounds_span['lat'] / 2, lat + min_bounds_span['lat'] / 2]\n    base_url : str, optional\n        URL for EGI data endpoint.\n        Defaults to :str:`BASE_URL`\n        See https://developer.earthdata.nasa.gov/sdps/programmatic-access-docs#egiparameters\n    page_size : int, optional\n        Number of granules returned from CMR per HTTP call. Defaults to 20.\n        See https://developer.earthdata.nasa.gov/sdps/programmatic-access-docs#cmrparameters\n    updated_since : str, optional\n        Can be used to find granules recently updated in CMR. Optional.\n        See https://developer.earthdata.nasa.gov/sdps/programmatic-access-docs#cmrparameters\n    version : str, int, optional\n        Data product version. Optional.\n        Number input will be cast into a 3 character string NNN, i.e. 3 -> \"003\"\n    token : str, optional\n        EGI Token from authentication process.\n        See https://wiki.earthdata.nasa.gov/display/CMR/Creating+a+Token+Common\n        If undefined, the node will look for a token under the setting key \"token@urs.earthdata.nasa.gov\".\n        If this setting is not defined, the node will attempt to generate a token using\n        :attr:`self.username` and :attr:`self.password`\n    username : str, optional\n        Earthdata username (https://urs.earthdata.nasa.gov/)\n        If undefined, node will look for a username under setting key \"username@urs.earthdata.nasa.gov\"\n    password : str, optional\n        Earthdata password (https://urs.earthdata.nasa.gov/)\n        If undefined, node will look for a password under setting key \"password@urs.earthdata.nasa.gov\"\n\n    Attributes\n    ----------\n    data : :class:`podpac.UnitsDataArray`\n        The data array compiled from downloaded EGI data\n    ",
+            "module": "podpac.datalib.egi.EGI"
+        },
+        "GFS": {
+            "attrs": {
+                "anon": {
+                    "default": false,
+                    "help": "",
+                    "type": "Bool",
+                    "type_str": "<traitlets.traitlets.Bool object at 0x7efdb46e9550>",
+                    "values": null
+                },
+                "date": {
+                    "default": "",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb4658bb0>",
+                    "values": null
+                },
+                "dims": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb46b9490>",
+                    "values": null
+                },
+                "hour": {
+                    "default": "",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb4658be0>",
+                    "values": null
+                },
+                "interpolation": {
+                    "default": "nearest",
+                    "help": "",
+                    "type": "InterpolationTrait",
+                    "type_str": "<podpac.core.interpolation.interpolation_manager.InterpolationTrait object at 0x7efdb46d9760>",
+                    "values": null
+                },
+                "level": {
+                    "default": "",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb4658b80>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "parameter": {
+                    "default": "",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb4658b50>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": "Composited and interpolated GFS data from S3\n\n    Attributes\n    ----------\n    parameter : str\n        parameter, e.g. 'SOIM'.\n    level : str\n        source depth, e.g. \"0-10 m DPTH\"\n    date : str\n        source date in '%Y%m%d' format, e.g. '20200130'\n    hour : str\n        source hour, e.g. '1200'\n    ",
+            "module": "podpac.datalib.gfs.GFS"
+        },
+        "IntakeCatalog": {
+            "attrs": {
+                "boundary": {
+                    "default": {},
+                    "help": "",
+                    "type": "Dict",
+                    "type_str": "<traitlets.traitlets.Dict object at 0x7efdb46f96a0>",
+                    "values": null
+                },
+                "crs": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb4611e80>",
+                    "values": null
+                },
+                "dims": {
+                    "default": null,
+                    "help": "",
+                    "type": "Dict",
+                    "type_str": "<traitlets.traitlets.Dict object at 0x7efdb4611e50>",
+                    "values": null
+                },
+                "field": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb4611e20>",
+                    "values": null
+                },
+                "nan_val": {
+                    "default": "nan",
+                    "help": "",
+                    "type": "Any",
+                    "type_str": "<traitlets.traitlets.Any object at 0x7efdb46f9670>",
+                    "values": null
+                },
+                "nan_vals": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb46f9610>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "query": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb4611eb0>",
+                    "values": null
+                },
+                "source": {
+                    "default": "",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb4611940>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                },
+                "uri": {
+                    "default": "",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb4611970>",
+                    "values": null
+                }
+            },
+            "help": "\n    Support for Intake Catalogs (https://intake.readthedocs.io/en/latest/index.html)\n    This primarily supports CSV data sources while we expand for Intake Catalogs.\n\n    Parameters\n    ----------\n    uri : str, required\n        Intake Catalog uri (local path to catalog yml file, or remote uri)\n        See https://intake.readthedocs.io/en/latest/catalog.html#local-catalogs\n    source : str, required\n        Intake Catalog source\n    field : str, optional,\n        If source is a dataframe with multiple fields, this specifies the field to use for analysis.for\n        Can be defined in the metadata in the intake catalog source.\n    dims : dict, optional\n        Dictionary defining the coordinates dimensions in the intake catalog source.\n        Keys are the podpac dimensions (lat, lon, time, alt) in stacked or unstacked form.\n        Values are the identifiers which locate the coordinates in the datasource.\n        Can be defined in the metadata in the intake catalog source.\n        Examples:\n            {'lat': 'lat column', 'time': 'time column'}\n            {'lat_lon': ['lat column', 'lon column']}\n            {'time': 'time'}\n    crs : str, optional\n        Coordinate reference system of the coordinates.\n        Can be defined in the metadata in the intake catalog source.\n    query : str, optional\n        A pandas dataframe query which will sub-select the rows in the data. For example, self.source_data = self.datasource.read().query(self.query)\n\n\n    Attributes\n    ----------\n    catalog : :class:`intake.catalog.Catalog`\n        Loaded intake catalog class\n        See https://intake.readthedocs.io/en/latest/api_base.html#intake.catalog.Catalog\n    dataset : :class:`intake.catalog.local.CatalogEntry`\n        Loaded intake catalog data source\n        See https://intake.readthedocs.io/en/latest/api_base.html#intake.catalog.entry.CatalogEntry\n    ",
+            "module": "podpac.datalib.intake_catalog.IntakeCatalog"
+        },
+        "Landsat8": {
+            "attrs": {
+                "asset": {
+                    "default": "",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb4662f70>",
+                    "values": null
+                },
+                "dims": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb46b9490>",
+                    "values": null
+                },
+                "interpolation": {
+                    "default": "nearest",
+                    "help": "",
+                    "type": "InterpolationTrait",
+                    "type_str": "<podpac.core.interpolation.interpolation_manager.InterpolationTrait object at 0x7efdb46d9760>",
+                    "values": null
+                },
+                "min_bounds_span": {
+                    "default": {},
+                    "help": "",
+                    "type": "Dict",
+                    "type_str": "<traitlets.traitlets.Dict object at 0x7efdb466d040>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "query": {
+                    "default": null,
+                    "help": "",
+                    "type": "Dict",
+                    "type_str": "<traitlets.traitlets.Dict object at 0x7efdb4662fa0>",
+                    "values": null
+                },
+                "source_coordinates": {
+                    "default": null,
+                    "help": "",
+                    "type": "Coordinates",
+                    "type_str": "<class 'podpac.core.coordinates.coordinates.Coordinates'>",
+                    "values": null
+                },
+                "sources": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb46b9340>",
+                    "values": null
+                },
+                "stac_api_url": {
+                    "default": "",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb4662f10>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": "\n    Landsat 8 on AWS OpenData\n    https://registry.opendata.aws/landsat-8/\n\n    Leverages sat-utils (https://github.com/sat-utils) developed by Development Seed\n\n    Parameters\n    ----------\n    asset : str, optional\n        Asset to download from the satellite image.\n        For Landsat8, this includes: 'B01','B02','B03','B04','B05','B06','B07','B08','B09','B10','B11','B12'\n        The asset must be a band name or a common extension name, see https://github.com/radiantearth/stac-spec/tree/master/extensions/eo\n        See also the Assets section of this tutorial: https://github.com/sat-utils/sat-stac/blob/master/tutorial-2.ipynb\n    query : dict, optional\n        Dictionary of properties to query on, supports eq, lt, gt, lte, gte\n        Passed through to the sat-search module.\n        See https://github.com/sat-utils/sat-search/blob/master/tutorial-1.ipynb\n        Defaults to None\n    min_bounds_span : dict, optional\n        Default is {}. When specified, gives the minimum bounds that will be used for a coordinate in the query, so\n        it works properly. If a user specified a lat, lon point, the query may fail since the min/max values for\n        lat/lon are the same. When specified, these bounds will be padded by the following for latitude (as an example):\n        [lat - min_bounds_span['lat'] / 2, lat + min_bounds_span['lat'] / 2]\n    ",
+            "module": "podpac.datalib.satutils.Landsat8"
+        },
+        "MODIS": {
+            "attrs": {
+                "data_key": {
+                    "default": "",
+                    "help": "data to retrieve (varies by product)",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb4662940>",
+                    "values": null
+                },
+                "interpolation": {
+                    "default": "nearest",
+                    "help": "",
+                    "type": "InterpolationTrait",
+                    "type_str": "<podpac.core.interpolation.interpolation_manager.InterpolationTrait object at 0x7efdb46d9760>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "product": {
+                    "default": null,
+                    "help": "MODIS product ID",
+                    "type": "Enum",
+                    "type_str": "<traitlets.traitlets.Enum object at 0x7efdb4662910>",
+                    "values": [
+                        "MCD43A4.006",
+                        "MOD09GA.006",
+                        "MYD09GA.006",
+                        "MOD09GQ.006",
+                        "MYD09GQ.006"
+                    ]
+                },
+                "source_coordinates": {
+                    "default": null,
+                    "help": "",
+                    "type": "Coordinates",
+                    "type_str": "<class 'podpac.core.coordinates.coordinates.Coordinates'>",
+                    "values": null
+                },
+                "sources": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb46b9340>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": null,
+            "module": "podpac.datalib.modis_pds.MODIS"
+        },
+        "SMAP": {
+            "attrs": {
+                "base_url": {
+                    "default": "https://n5eil01u.ecs.nsidc.org/egi/request",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb466da90>",
+                    "values": null
+                },
+                "boundary": {
+                    "default": {},
+                    "help": "",
+                    "type": "Dict",
+                    "type_str": "<traitlets.traitlets.Dict object at 0x7efdb46f96a0>",
+                    "values": null
+                },
+                "check_quality_flags": {
+                    "default": true,
+                    "help": "",
+                    "type": "Bool",
+                    "type_str": "<traitlets.traitlets.Bool object at 0x7efdb466d670>",
+                    "values": null
+                },
+                "data_key": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb466da60>",
+                    "values": null
+                },
+                "interpolation": {
+                    "default": "nearest",
+                    "help": "",
+                    "type": "InterpolationTrait",
+                    "type_str": "<podpac.core.interpolation.interpolation_manager.InterpolationTrait object at 0x7efdb46d9760>",
+                    "values": null
+                },
+                "min_bounds_span": {
+                    "default": {
+                        "lat": 0.3,
+                        "lon": 0.3,
+                        "time": "3,h"
+                    },
+                    "help": "",
+                    "type": "Dict",
+                    "type_str": "<traitlets.traitlets.Dict object at 0x7efdb466d6a0>",
+                    "values": null
+                },
+                "nan_val": {
+                    "default": "nan",
+                    "help": "",
+                    "type": "Any",
+                    "type_str": "<traitlets.traitlets.Any object at 0x7efdb46f9670>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "product": {
+                    "default": "SPL4SMAU",
+                    "help": "",
+                    "type": "Enum",
+                    "type_str": "<traitlets.traitlets.Enum object at 0x7efdb466d700>",
+                    "values": [
+                        "SPL4SMAU",
+                        "SPL4SMGP",
+                        "SPL4SMLM",
+                        "SPL3SMAP",
+                        "SPL3SMA",
+                        "SPL3SMP_AM",
+                        "SPL3SMP_PM",
+                        "SPL3SMP_E_AM",
+                        "SPL3SMP_E_PM"
+                    ]
+                },
+                "time_key": {
+                    "default": "",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb46581f0>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": "\n    SMAP Node. For more information about SMAP, see https://nsidc.org/data/smap\n\n    SMAP interface using the EGI Data Portal\n    https://developer.earthdata.nasa.gov/sdps/programmatic-access-docs\n    with the base URL: https://n5eil01u.ecs.nsidc.org/egi/request\n\n    To access data from this node, an Earthdata login is required. This can either be specified when\n    creating the node:\n    ```python\n    smap = SMAP(username=\"your_user_name\", password=\"your_password\")\n    ```\n    OR you can set the following PODPAC settings:\n    ```python\n    podpac.settings[\"username@urs.earthdata.nasa.gov\"] = \"your_user_name\"\n    podpac.settings[\"password@urs.earthdata.nasa.gov\"] = \"your_password\"\n    podpac.settings.save()  # To have this information persist\n    smap = SMAP()\n    ```\n\n    Parameters\n    ----------\n    product : str\n        One of the :list:`SMAP_PRODUCTS` strings\n    check_quality_flags : bool, optional\n        Default is True. If True, data will be filtered based on the SMAP data quality flag, and only\n        high quality data is returned.\n    data_key : str, optional\n        Default will return soil moisture and is set automatically based on the product selected. Other\n        possible data keys can be found\n\n    Attributes\n    ----------\n    nan_vals : list\n        Nan values in SMAP data\n    username : str, optional\n        Earthdata username (https://urs.earthdata.nasa.gov/)\n        If undefined, node will look for a username under setting key \"username@urs.earthdata.nasa.gov\"\n    password : str, optional\n        Earthdata password (https://urs.earthdata.nasa.gov/)\n        If undefined, node will look for a password under setting key \"password@urs.earthdata.nasa.gov\"\n    ",
+            "module": "podpac.datalib.smap_egi.SMAP"
+        },
+        "Sentinel2": {
+            "attrs": {
+                "anon": {
+                    "default": false,
+                    "help": "",
+                    "type": "Bool",
+                    "type_str": "<traitlets.traitlets.Bool object at 0x7efdb4662fd0>",
+                    "values": null
+                },
+                "asset": {
+                    "default": "",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb4662f70>",
+                    "values": null
+                },
+                "dims": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb46b9490>",
+                    "values": null
+                },
+                "interpolation": {
+                    "default": "nearest",
+                    "help": "",
+                    "type": "InterpolationTrait",
+                    "type_str": "<podpac.core.interpolation.interpolation_manager.InterpolationTrait object at 0x7efdb46d9760>",
+                    "values": null
+                },
+                "min_bounds_span": {
+                    "default": {},
+                    "help": "",
+                    "type": "Dict",
+                    "type_str": "<traitlets.traitlets.Dict object at 0x7efdb466d040>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "query": {
+                    "default": null,
+                    "help": "",
+                    "type": "Dict",
+                    "type_str": "<traitlets.traitlets.Dict object at 0x7efdb4662fa0>",
+                    "values": null
+                },
+                "source_coordinates": {
+                    "default": null,
+                    "help": "",
+                    "type": "Coordinates",
+                    "type_str": "<class 'podpac.core.coordinates.coordinates.Coordinates'>",
+                    "values": null
+                },
+                "sources": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb46b9340>",
+                    "values": null
+                },
+                "stac_api_url": {
+                    "default": "",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb4662f10>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": "\n    Sentinel 2 on AWS OpenData\n    https://registry.opendata.aws/sentinel-2/\n\n    Leverages sat-utils (https://github.com/sat-utils) developed by Development Seed.\n\n    Note this data source requires the requester to pay, so you must set podpac settings[\"AWS_REQUESTER_PAYS\"] = True\n\n    Parameters\n    ----------\n    asset : str, optional\n        Asset to download from the satellite image.\n        For Sentinel2, this includes: 'tki','B01','B02','B03','B04','B05','B06','B07','B08','B8A','B09','B10','B11','B12\n        The asset must be a band name or a common extension name, see https://github.com/radiantearth/stac-spec/tree/master/extensions/eo\n        See also the Assets section of this tutorial: https://github.com/sat-utils/sat-stac/blob/master/tutorial-2.ipynb\n    query : dict, optional\n        Dictionary of properties to query on, supports eq, lt, gt, lte, gte\n        Passed through to the sat-search module.\n        See https://github.com/sat-utils/sat-search/blob/master/tutorial-1.ipynb\n        Defaults to None\n    min_bounds_span : dict, optional\n        Default is {}. When specified, gives the minimum bounds that will be used for a coordinate in the query, so\n        it works properly. If a user specified a lat, lon point, the query may fail since the min/max values for\n        lat/lon are the same. When specified, these bounds will be padded by the following for latitude (as an example):\n        [lat - min_bounds_span['lat'] / 2, lat + min_bounds_span['lat'] / 2]\n    ",
+            "module": "podpac.datalib.satutils.Sentinel2"
+        },
+        "SoilSCAPE20min": {
+            "attrs": {
+                "data_key": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb46113d0>",
+                    "values": null
+                },
+                "dims": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb46b9490>",
+                    "values": null
+                },
+                "exclude": {
+                    "default": [
+                        1,
+                        2,
+                        3,
+                        4
+                    ],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb4611310>",
+                    "values": null
+                },
+                "interpolation": {
+                    "default": "nearest",
+                    "help": "",
+                    "type": "InterpolationTrait",
+                    "type_str": "<podpac.core.interpolation.interpolation_manager.InterpolationTrait object at 0x7efdb46d9760>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "site": {
+                    "default": null,
+                    "help": "",
+                    "type": "Enum",
+                    "type_str": "<traitlets.traitlets.Enum object at 0x7efdb46112e0>",
+                    "values": [
+                        "BLMLand1STonzi_CA",
+                        "BLMLand2STonzi_CA",
+                        "BLMLand3NTonzi_CA",
+                        "Canton_OK",
+                        "Kendall_AZ",
+                        "LuckyHills_AZ",
+                        "MatthaeiGardens_MI",
+                        "NewHoganLakeN_CA",
+                        "NewHoganLakeS_CA",
+                        "TerradOro_CA",
+                        "TonziRanch_CA",
+                        "Vaira_CA"
+                    ]
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                }
+            },
+            "help": "SoilSCAPE 20min soil moisture data for an entire site, with interpolation.",
+            "module": "podpac.datalib.soilscape.SoilSCAPE20min"
+        },
+        "TerrainTiles": {
+            "attrs": {
+                "bucket": {
+                    "default": "elevation-tiles-prod",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb467b3a0>",
+                    "values": null
+                },
+                "interpolation": {
+                    "default": "nearest",
+                    "help": "",
+                    "type": "InterpolationTrait",
+                    "type_str": "<podpac.core.interpolation.interpolation_manager.InterpolationTrait object at 0x7efdb46d9760>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "source_coordinates": {
+                    "default": null,
+                    "help": "",
+                    "type": "Coordinates",
+                    "type_str": "<class 'podpac.core.coordinates.coordinates.Coordinates'>",
+                    "values": null
+                },
+                "tile_format": {
+                    "default": "geotiff",
+                    "help": "",
+                    "type": "Enum",
+                    "type_str": "<traitlets.traitlets.Enum object at 0x7efdb467b310>",
+                    "values": [
+                        "geotiff",
+                        "terrarium",
+                        "normal"
+                    ]
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                },
+                "urls": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb467b400>",
+                    "values": null
+                },
+                "zoom": {
+                    "default": -1,
+                    "help": "",
+                    "type": "Int",
+                    "type_str": "<traitlets.traitlets.Int object at 0x7efdb467b2b0>",
+                    "values": null
+                }
+            },
+            "help": "Terrain Tiles gridded elevation tiles data library\n\n    Hosted on AWS S3\n    https://registry.opendata.aws/terrain-tiles/\n\n    Description\n        Gridded elevation tiles\n    Resource type\n        S3 Bucket\n    Amazon Resource Name (ARN)\n        arn:aws:s3:::elevation-tiles-prod\n    AWS Region\n        us-east-1\n\n    Documentation: https://mapzen.com/documentation/terrain-tiles/\n\n    Parameters\n    ----------\n    zoom : int\n        Zoom level of tiles. Defaults to 6.\n    tile_format : str\n        One of ['geotiff', 'terrarium', 'normal']. Defaults to 'geotiff'\n        PODPAC node can only evaluate 'geotiff' formats.\n        Other tile_formats can be specified for :meth:`download`\n        No support for 'skadi' formats at this time.\n    bucket : str\n        Bucket of the terrain tiles.\n        Defaults to 'elevation-tiles-prod'\n    ",
+            "module": "podpac.datalib.terraintiles.TerrainTiles"
+        },
+        "WeatherCitizen": {
+            "attrs": {
+                "boundary": {
+                    "default": {},
+                    "help": "",
+                    "type": "Dict",
+                    "type_str": "<traitlets.traitlets.Dict object at 0x7efdb46f96a0>",
+                    "values": null
+                },
+                "data_key": {
+                    "default": "properties.pressure",
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb467b730>",
+                    "values": null
+                },
+                "device": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb467b790>",
+                    "values": null
+                },
+                "interpolation": {
+                    "default": "nearest",
+                    "help": "",
+                    "type": "InterpolationTrait",
+                    "type_str": "<podpac.core.interpolation.interpolation_manager.InterpolationTrait object at 0x7efdb46d9760>",
+                    "values": null
+                },
+                "nan_val": {
+                    "default": "nan",
+                    "help": "",
+                    "type": "Any",
+                    "type_str": "<traitlets.traitlets.Any object at 0x7efdb46f9670>",
+                    "values": null
+                },
+                "nan_vals": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efdb46f9610>",
+                    "values": null
+                },
+                "output": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efde7c1f0d0>",
+                    "values": null
+                },
+                "outputs": {
+                    "default": [],
+                    "help": "",
+                    "type": "List",
+                    "type_str": "<traitlets.traitlets.List object at 0x7efde7c1f100>",
+                    "values": null
+                },
+                "override_limit": {
+                    "default": false,
+                    "help": "",
+                    "type": "Bool",
+                    "type_str": "<traitlets.traitlets.Bool object at 0x7efdb467b850>",
+                    "values": null
+                },
+                "query": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb467b7f0>",
+                    "values": null
+                },
+                "units": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdef9dc8b0>",
+                    "values": null
+                },
+                "uuid": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb467b760>",
+                    "values": null
+                },
+                "verbose": {
+                    "default": true,
+                    "help": "",
+                    "type": "Bool",
+                    "type_str": "<traitlets.traitlets.Bool object at 0x7efdb467b820>",
+                    "values": null
+                },
+                "version": {
+                    "default": null,
+                    "help": "",
+                    "type": "Unicode",
+                    "type_str": "<traitlets.traitlets.Unicode object at 0x7efdb467b7c0>",
+                    "values": null
+                }
+            },
+            "help": "DataSource to handle WeatherCitizen data\n\n    Attributes\n    ----------\n    source : str\n        Collection (database) to pull data from.\n        Defaults to \"geosensors\" which is the primary data collection\n    data_key : str, int\n        Data key of interest, default \"properties.pressure\"\n    uuid : str, list(str), options\n        String or list of strings to filter data by uuid\n    device : str, list(str), ObjectId, list(ObjectId), optional\n        String or list of strings to filter data by device object id\n    version : string, list(str), optional\n        String or list of strings to filter data to filter data by WeatherCitizen version\n    query : dict, optional\n        Arbitrary pymongo query to apply to data.\n        Note that certain fields in this query may be overriden if other keyword arguments are specified\n    verbose : bool, optional\n        Display log messages or progress\n    ",
+            "module": "podpac.datalib.weathercitizen.WeatherCitizen"
+        }
+    }
+}

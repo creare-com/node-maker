@@ -1,0 +1,21 @@
+<div id="legend-container">
+
+    <div style="display:flex; flex-direction: column; align-items: center;" >
+
+        <span id="legend-title">
+            {{ legendParams.title }}
+        </span>
+        <div style="flex-direction: row; display: flex;">
+            <img id="cmapImage"
+                [style.width]="legendParams.cmapWidth"
+                [style.height]="legendParams.cmapHeight"
+                [src]="legendParams.imageSrc"
+            />
+            <div style="flex-direction: column; display: flex; justify-content: space-between;">
+                <input id="legend-vmax" type="number" class="legend-input" [(ngModel)]="legendParams.vMax" (change)="legendScaleChange()">
+                <input id="legend-vmin" type="number" class="legend-input" [(ngModel)]="legendParams.vMin" (change)="legendScaleChange()">
+            </div>
+        </div>
+    </div>
+
+</div>

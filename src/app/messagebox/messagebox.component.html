@@ -1,0 +1,5 @@
+<div id="messageboxContainer" [style.display]="show?'inherit':'none'">
+    <button id="mboxClose" (click)="close()">Close</button>
+    <div id="mboxMessage" [style.color]="messageColor" > {{message}} </div>
+</div>
+
